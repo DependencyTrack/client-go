@@ -25,7 +25,12 @@ type Project struct {
 	Tags               []Tag             `json:"tags,omitempty"`
 	Active             bool              `json:"active"`
 	Metrics            ProjectMetrics    `json:"metrics"`
+	ParentRef          *ParentRef        `json:"parent,omitempty"`
 	LastBOMImport      int               `json:"lastBomImport"`
+}
+
+type ParentRef struct {
+	UUID uuid.UUID `json:"uuid,omitempty"`
 }
 
 type ProjectService struct {
