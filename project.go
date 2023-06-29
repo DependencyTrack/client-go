@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/google/uuid"
 )
@@ -78,6 +79,21 @@ func (ps ProjectService) GetProjectsForName(ctx context.Context, name string, ex
 	}
 
 	req, err := ps.client.newRequest(ctx, http.MethodGet, "/api/v1/project", withParams(params))
+	if err != nil {
+		return
+	}
+
+	_, err = ps.client.doRequest(req, &p)
+	return
+}
+
+func (ps ProjectService) GetByTag(ctx context.Context, tag string, excludeInactive, onlyRoot bool) (p []Project, err error) {
+	params := map[string]string{
+		"excludeInactive": strconv.FormatBool(excludeInactive),
+		"onlyRoot":        strconv.FormatBool(onlyRoot),
+	}
+
+	req, err := ps.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/project/tag/%s", tag), withParams(params))
 	if err != nil {
 		return
 	}
