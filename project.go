@@ -141,6 +141,16 @@ func (ps ProjectService) Lookup(ctx context.Context, name, version string) (p Pr
 	return
 }
 
+func (ps ProjectService) GetAllByTag(ctx context.Context, tag string) (p []Project, err error) {
+	req, err := ps.client.newRequest(ctx, http.MethodGet, "/api/v1/project/tag", withPathParam(tag))
+	if err != nil {
+		return
+	}
+
+	_, err = ps.client.doRequest(req, &p)
+	return
+}
+
 type ProjectCloneRequest struct {
 	ProjectUUID         uuid.UUID `json:"project"`
 	Version             string    `json:"version"`

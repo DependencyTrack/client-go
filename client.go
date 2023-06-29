@@ -148,6 +148,16 @@ func withParams(params map[string]string) requestOption {
 	}
 }
 
+func withPathParam(param string) requestOption {
+	return func(req *http.Request) error {
+		if len(param) == 0 {
+			return nil
+		}
+		req.URL.Path = fmt.Sprintf("%s/%s", req.URL.Path, param)
+		return nil
+	}
+}
+
 func withBody(body interface{}) requestOption {
 	return func(req *http.Request) error {
 		if body == nil {
