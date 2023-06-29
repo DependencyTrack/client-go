@@ -141,13 +141,18 @@ func (ps ProjectService) Lookup(ctx context.Context, name, version string) (p Pr
 	return
 }
 
-func (ps ProjectService) GetAllByTag(ctx context.Context, tag string) (p []Project, err error) {
-	req, err := ps.client.newRequest(ctx, http.MethodGet, "/api/v1/project/tag", withPathParam(tag))
+func (ps ProjectService) GetAllByTag(ctx context.Context, tag string, po PageOptions) (p Page[Project], err error) {
+	req, err := ps.client.newRequest(ctx, http.MethodGet, "/api/v1/project/tag", withPathParam(tag), withPageOptions(po))
 	if err != nil {
 		return
 	}
 
-	_, err = ps.client.doRequest(req, &p)
+	res, err := ps.client.doRequest(req, &p.Items)
+	if err != nil {
+		return
+	}
+
+	p.TotalCount = res.TotalCount
 	return
 }
 
