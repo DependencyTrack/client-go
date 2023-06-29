@@ -353,3 +353,11 @@ func WithMTLS(caCertFile string, clientCertFile string, clientKeyFile string) Cl
 		return errors.New("could not set tls options")
 	}
 }
+
+// WithHttpClient overrides the default HttpClient.
+func WithHttpClient(client *http.Client) ClientOption {
+	return func(c *Client) error {
+		c.httpClient = client
+		return nil
+	}
+}
