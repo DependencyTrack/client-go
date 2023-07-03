@@ -148,12 +148,15 @@ func withParams(params map[string]string) requestOption {
 	}
 }
 
-func withPathParam(param string) requestOption {
+func withPathParams(params map[string]string) requestOption {
 	return func(req *http.Request) error {
-		if len(param) == 0 {
+		if len(params) == 0 {
 			return nil
 		}
-		req.URL.Path = fmt.Sprintf("%s/%s", req.URL.Path, param)
+
+		for k, v := range params {
+			req.URL.Path = strings.Replace(req.URL.Path, fmt.Sprintf("{%s}", k), v, -1)
+		}
 		return nil
 	}
 }

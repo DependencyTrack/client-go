@@ -142,7 +142,11 @@ func (ps ProjectService) Lookup(ctx context.Context, name, version string) (p Pr
 }
 
 func (ps ProjectService) GetAllByTag(ctx context.Context, tag string, po PageOptions) (p Page[Project], err error) {
-	req, err := ps.client.newRequest(ctx, http.MethodGet, "/api/v1/project/tag", withPathParam(tag), withPageOptions(po))
+	params := map[string]string{
+		"tag": tag,
+	}
+
+	req, err := ps.client.newRequest(ctx, http.MethodGet, "/api/v1/project/tag/{tag}", withPathParams(params), withPageOptions(po))
 	if err != nil {
 		return
 	}
