@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/google/uuid"
 )
@@ -63,18 +64,10 @@ func (ps ProjectService) GetAll(ctx context.Context, po PageOptions) (p Page[Pro
 }
 
 func (ps ProjectService) GetProjectsForName(ctx context.Context, name string, excludeInactive, onlyRoot bool) (p []Project, err error) {
-	excludeInactiveStr := "false"
-	onlyRootStr := "false"
-	if excludeInactive {
-		excludeInactiveStr = "true"
-	}
-	if onlyRoot {
-		onlyRootStr = "true"
-	}
 	params := map[string]string{
 		"name":            name,
-		"excludeInactive": excludeInactiveStr,
-		"onlyRoot":        onlyRootStr,
+		"excludeInactive": strconv.FormatBool(excludeInactive),
+		"onlyRoot":        strconv.FormatBool(onlyRoot),
 	}
 
 	req, err := ps.client.newRequest(ctx, http.MethodGet, "/api/v1/project", withParams(params))
@@ -141,12 +134,16 @@ func (ps ProjectService) Lookup(ctx context.Context, name, version string) (p Pr
 	return
 }
 
-func (ps ProjectService) GetAllByTag(ctx context.Context, tag string, po PageOptions) (p Page[Project], err error) {
-	params := map[string]string{
+func (ps ProjectService) GetAllByTag(ctx context.Context, tag string, excludeInactive, onlyRoot bool, po PageOptions) (p Page[Project], err error) {
+	pathParams := map[string]string{
 		"tag": tag,
 	}
+	params := map[string]string{
+		"excludeInactive": strconv.FormatBool(excludeInactive),
+		"onlyRoot":        strconv.FormatBool(onlyRoot),
+	}
 
-	req, err := ps.client.newRequest(ctx, http.MethodGet, "/api/v1/project/tag/{tag}", withPathParams(params), withPageOptions(po))
+	req, err := ps.client.newRequest(ctx, http.MethodGet, "/api/v1/project/tag/{tag}", withPathParams(pathParams), withParams(params), withPageOptions(po))
 	if err != nil {
 		return
 	}
