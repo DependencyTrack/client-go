@@ -84,7 +84,7 @@ func (cs ComponentService) Create(ctx context.Context, projectUUID string, compo
 }
 
 func (cs ComponentService) Update(ctx context.Context, component Component) (c Component, err error) {
-	req, err := cs.client.newRequest(ctx, http.MethodPut,
+	req, err := cs.client.newRequest(ctx, http.MethodPost,
 		"/api/v1/component",
 		withBody(component))
 	if err != nil {
