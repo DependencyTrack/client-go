@@ -3,9 +3,8 @@ package dtrack_test
 import (
 	"context"
 
-	"github.com/google/uuid"
-
 	"github.com/DependencyTrack/client-go"
+	"github.com/google/uuid"
 )
 
 // This example demonstrates how to fetch all findings for a given project.
