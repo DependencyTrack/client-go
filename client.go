@@ -40,6 +40,7 @@ type Client struct {
 	Finding           FindingService
 	License           LicenseService
 	Metrics           MetricsService
+	OIDC              OIDCService
 	Permission        PermissionService
 	Policy            PolicyService
 	PolicyCondition   PolicyConditionService
@@ -86,6 +87,7 @@ func NewClient(baseURL string, options ...ClientOption) (*Client, error) {
 	client.Finding = FindingService{client: &client}
 	client.License = LicenseService{client: &client}
 	client.Metrics = MetricsService{client: &client}
+	client.OIDC = OIDCService{client: &client}
 	client.Permission = PermissionService{client: &client}
 	client.Policy = PolicyService{client: &client}
 	client.PolicyCondition = PolicyConditionService{client: &client}
@@ -247,6 +249,13 @@ func withPageOptions(po PageOptions) requestOption {
 
 		req.URL.RawQuery = query.Encode()
 
+		return nil
+	}
+}
+
+func withAcceptContentType(contentType string) requestOption {
+	return func(req *http.Request) error {
+		req.Header.Set("Accept", contentType)
 		return nil
 	}
 }
