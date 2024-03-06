@@ -41,6 +41,10 @@ type Component struct {
 	DirectDependencies string              `json:"directDependencies,omitempty"`
 	Notes              string              `json:"notes,omitempty"`
 	ExternalReferences []ExternalReference `json:"externalReferences,omitempty"`
+	RepositoryMeta     *RepositoryMeta     `json:"repositoryMeta,omitempty"`
+	Metrics            map[string]float64  `json:"metrics"`
+}
+
 type ComponentGraph struct {
 	Name                  string   `json:"name"`
 	Version               string   `json:"version"`
@@ -57,6 +61,15 @@ type ExternalReference struct {
 	Type    string `json:"type,omitempty"`
 	URL     string `json:"url,omitempty"`
 	Comment string `json:"comment,omitempty"`
+}
+
+type RepositoryMeta struct {
+	RepositoryType string `json:"repositoryType"`
+	Namespace      string `json:"namespace"`
+	Name           string `json:"name"`
+	LatestVersion  string `json:"latestVersion"`
+	Published      int64  `json:"published"`
+	LastCheck      int64  `json:"lastCheck"`
 }
 
 type ComponentService struct {
