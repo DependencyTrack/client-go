@@ -228,9 +228,10 @@ type Page[T any] struct {
 }
 
 type PageOptions struct {
-	Offset     int // Offset of the elements to return
-	PageNumber int // Page to return
-	PageSize   int // Amount of elements to return per page
+	Offset     int               // Offset of the elements to return
+	PageNumber int               // Page to return
+	PageSize   int               // Amount of elements to return per page
+	Params     map[string]string // Additional params to be added to query
 }
 
 func withPageOptions(po PageOptions) requestOption {
@@ -245,6 +246,10 @@ func withPageOptions(po PageOptions) requestOption {
 
 		if po.PageSize > 0 {
 			query.Set("pageSize", strconv.Itoa(po.PageSize))
+		}
+
+		for key, value := range po.Params {
+			query.Set(key, value)
 		}
 
 		req.URL.RawQuery = query.Encode()
