@@ -48,8 +48,9 @@ func (ps ProjectService) Get(ctx context.Context, projectUUID uuid.UUID) (p Proj
 	return
 }
 
-func (ps ProjectService) GetAll(ctx context.Context, po PageOptions) (p Page[Project], err error) {
-	req, err := ps.client.newRequest(ctx, http.MethodGet, "/api/v1/project", withPageOptions(po))
+func (ps ProjectService) GetAll(ctx context.Context, params map[string]string, po PageOptions) (p Page[Project], err error) {
+	req, err := ps.client.newRequest(ctx, http.MethodGet, "/api/v1/project", withParams(params), withPageOptions(po))
+
 	if err != nil {
 		return
 	}

@@ -86,8 +86,8 @@ func (cs ComponentService) Get(ctx context.Context, componentUUID uuid.UUID) (c 
 	return
 }
 
-func (cs ComponentService) GetAll(ctx context.Context, projectUUID uuid.UUID, po PageOptions) (p Page[Component], err error) {
-	req, err := cs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/component/project/%s", projectUUID), withPageOptions(po))
+func (cs ComponentService) GetAll(ctx context.Context, projectUUID uuid.UUID, params map[string]string, po PageOptions) (p Page[Component], err error) {
+	req, err := cs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/component/project/%s", projectUUID), withParams(params), withPageOptions(po))
 	if err != nil {
 		return
 	}
