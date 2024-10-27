@@ -3,10 +3,9 @@ package dtrack
 import (
 	"context"
 	"fmt"
+	"github.com/google/uuid"
 	"net/http"
 	"net/url"
-
-	"github.com/google/uuid"
 )
 
 type BOMService struct {
@@ -144,7 +143,14 @@ type bomProcessingResponse struct {
 	Processing bool `json:"processing"`
 }
 
+// IsBeingProcessed checks whether the BOM associated with a given token is still being processed.
+//
+// Deprecated: for server versions 4.11.0 and above, EventService.IsBeingProcessed should be used.
 func (bs BOMService) IsBeingProcessed(ctx context.Context, token BOMUploadToken) (bool, error) {
+	if bs.client.isServerVersionAtLeast("4.11.0") {
+		return bs.client.Event.IsBeingProcessed(ctx, EventToken(token))
+	}
+
 	req, err := bs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/bom/token/%s", token))
 	if err != nil {
 		return false, err

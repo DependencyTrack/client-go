@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"golang.org/x/mod/semver"
 	"io"
 	"log"
 	"mime/multipart"
@@ -32,12 +33,14 @@ type Client struct {
 	baseURL    *url.URL
 	userAgent  string
 	debug      bool
+	about      About
 
 	About             AboutService
 	Analysis          AnalysisService
 	BOM               BOMService
 	Component         ComponentService
 	Finding           FindingService
+	Event             EventService
 	License           LicenseService
 	Metrics           MetricsService
 	OIDC              OIDCService
@@ -85,6 +88,7 @@ func NewClient(baseURL string, options ...ClientOption) (*Client, error) {
 	client.BOM = BOMService{client: &client}
 	client.Component = ComponentService{client: &client}
 	client.Finding = FindingService{client: &client}
+	client.Event = EventService{client: &client}
 	client.License = LicenseService{client: &client}
 	client.Metrics = MetricsService{client: &client}
 	client.OIDC = OIDCService{client: &client}
@@ -101,6 +105,11 @@ func NewClient(baseURL string, options ...ClientOption) (*Client, error) {
 	client.ViolationAnalysis = ViolationAnalysisService{client: &client}
 	client.Vulnerability = VulnerabilityService{client: &client}
 
+	client.about, err = client.About.Get(context.Background())
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch version information: %w", err)
+	}
+
 	return &client, nil
 }
 
@@ -108,6 +117,22 @@ func NewClient(baseURL string, options ...ClientOption) (*Client, error) {
 func (c Client) BaseURL() *url.URL {
 	u := *c.baseURL
 	return &u
+}
+
+func (c Client) isServerVersionAtLeast(targetVersion string) bool {
+	// semver requires versions to be prefixed with "v",
+	// and doesn't support "-SNAPSHOT" suffixes.
+	targetVersionNormalized := fmt.Sprintf("v%s", targetVersion)
+	actualVersionNormalized := fmt.Sprintf("v%s", strings.TrimSuffix(c.about.Version, "-SNAPSHOT"))
+	return semver.Compare(targetVersionNormalized, actualVersionNormalized) >= 0
+}
+
+func (c Client) assertServerVersionAtLeast(targetVersion string) error {
+	if c.isServerVersionAtLeast(targetVersion) {
+		return fmt.Errorf("server version must be at least %s, but is %s", targetVersion, c.about.Version)
+	}
+
+	return nil
 }
 
 func (c Client) newRequest(ctx context.Context, method, path string, options ...requestOption) (*http.Request, error) {

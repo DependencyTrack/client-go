@@ -45,7 +45,7 @@ func Example_uploadBOM() {
 		for {
 			select {
 			case <-ticker.C:
-				processing, err := client.BOM.IsBeingProcessed(context.TODO(), uploadToken)
+				processing, err := client.Event.IsBeingProcessed(context.TODO(), dtrack.EventToken(uploadToken))
 				if err != nil {
 					errChan <- err
 					return
@@ -64,7 +64,7 @@ func Example_uploadBOM() {
 	select {
 	case <-doneChan:
 		fmt.Println("bom processing completed")
-	case <-errChan:
+	case err = <-errChan:
 		fmt.Printf("failed to wait for bom processing: %v\n", err)
 	}
 }
