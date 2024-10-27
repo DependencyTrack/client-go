@@ -2,47 +2,89 @@ package dtrack
 
 import (
 	"context"
-	"net/http"
+	"github.com/google/uuid"
+	"github.com/testcontainers/testcontainers-go"
+	"github.com/testcontainers/testcontainers-go/wait"
+	"log"
 	"testing"
 
-	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/require"
 )
 
 func TestAboutService_Get(t *testing.T) {
-	client, err := NewClient("http://localhost")
-	require.NoError(t, err)
-
-	httpmock.ActivateNonDefault(client.httpClient)
-	defer httpmock.DeactivateAndReset()
-
-	httpmock.RegisterResponder(http.MethodGet, "http://localhost/api/version",
-		httpmock.NewStringResponder(http.StatusOK, `{
-	"timestamp": "2020-09-29T22:02:23Z",
-	"version": "4.0.0-SNAPSHOT",
-	"uuid": "c35ce882-398d-46ed-8c36-6148bf73f941",
-	"systemUuid": "f2eee6f6-a161-418a-baf5-b57a2e30de82",
-	"application": "Dependency-Track",
-	"framework": {
-		"timestamp": "2020-07-20T15:56:44Z",
-		"version": "1.8.0-SNAPSHOT",
-		"uuid": "beee8786-ca9c-473a-b7a5-efcc95e8c469",
-		"name": "Alpine"
-	}
-}`))
+	_, client := setUpContainer(t)
 
 	about, err := client.About.Get(context.TODO())
 	require.NoError(t, err)
 	require.NotNil(t, about)
 
-	require.Equal(t, "2020-09-29T22:02:23Z", about.Timestamp)
-	require.Equal(t, "4.0.0-SNAPSHOT", about.Version)
-	require.Equal(t, "c35ce882-398d-46ed-8c36-6148bf73f941", about.UUID.String())
-	require.Equal(t, "f2eee6f6-a161-418a-baf5-b57a2e30de82", about.SystemUUID.String())
+	require.NotEmpty(t, about.Timestamp)
+	require.NotEmpty(t, about.Version)
+	require.NotEqual(t, uuid.Nil, about.UUID)
+	require.NotEqual(t, uuid.Nil, about.SystemUUID)
 	require.Equal(t, "Dependency-Track", about.Application)
 
-	require.Equal(t, "2020-07-20T15:56:44Z", about.Framework.Timestamp)
-	require.Equal(t, "1.8.0-SNAPSHOT", about.Framework.Version)
-	require.Equal(t, "beee8786-ca9c-473a-b7a5-efcc95e8c469", about.Framework.UUID.String())
+	require.NotEmpty(t, about.Framework.Timestamp)
+	require.NotEmpty(t, about.Framework.Version)
+	require.NotEqual(t, uuid.Nil, about.Framework.UUID)
 	require.Equal(t, "Alpine", about.Framework.Name)
+}
+
+func setUpContainer(t *testing.T) (testcontainers.Container, *Client) {
+	ctx := context.Background()
+
+	container, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
+		ContainerRequest: testcontainers.ContainerRequest{
+			Image: "dependencytrack/apiserver:latest",
+			Env: map[string]string{
+				"JAVA_OPTIONS":                     "-Xmx1g",
+				"SYSTEM_REQUIREMENT_CHECK_ENABLED": "false",
+			},
+			ExposedPorts: []string{"8080/tcp"},
+			WaitingFor:   wait.ForLog("Dependency-Track is ready"),
+		},
+		Started: true,
+	})
+
+	t.Cleanup(func() {
+		err = container.Terminate(ctx)
+		if err != nil {
+			log.Fatalf("failed to terminate container: %v", err)
+		}
+	})
+	require.NoError(t, err)
+
+	apiURL, err := container.Endpoint(ctx, "http")
+	require.NoError(t, err)
+
+	client, err := NewClient(apiURL)
+	require.NoError(t, err)
+
+	err = client.User.ForceChangePassword(ctx, "admin", "admin", "test")
+	require.NoError(t, err)
+
+	bearerToken, err := client.User.Login(ctx, "admin", "test")
+	require.NoError(t, err)
+
+	client, err = NewClient(apiURL, WithBearerToken(bearerToken))
+	require.NoError(t, err)
+
+	// TODO: Pass desired permissions as parameter to setUpContainer
+	team, err := client.Team.Create(ctx, Team{
+		Name: "test",
+		Permissions: []Permission{
+			{
+				Name: "VIEW_PORTFOLIO",
+			},
+		},
+	})
+	require.NoError(t, err)
+
+	apiKey, err := client.Team.GenerateAPIKey(ctx, team.UUID)
+	require.NoError(t, err)
+
+	client, err = NewClient(apiURL, WithAPIKey(apiKey))
+	require.NoError(t, err)
+
+	return container, client
 }
