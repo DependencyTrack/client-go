@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 type BOMService struct {
@@ -16,9 +17,11 @@ type BOMUploadRequest struct {
 	ProjectUUID    *uuid.UUID `json:"project,omitempty"`
 	ProjectName    string     `json:"projectName,omitempty"`
 	ProjectVersion string     `json:"projectVersion,omitempty"`
-	ParentUUID     *uuid.UUID `json:"parentUUID,omitempty"`    // Since v4.8.0
-	ParentName     string     `json:"parentName,omitempty"`    // Since v4.8.0
-	ParentVersion  string     `json:"parentVersion,omitempty"` // Since v4.8.0
+	ProjectTags    []Tag      `json:"projectTags,omitempty"`            // Since v4.12.0
+	ParentUUID     *uuid.UUID `json:"parentUUID,omitempty"`             // Since v4.8.0
+	ParentName     string     `json:"parentName,omitempty"`             // Since v4.8.0
+	ParentVersion  string     `json:"parentVersion,omitempty"`          // Since v4.8.0
+	IsLatest       bool       `json:"isLatestProjectVersion,omitempty"` // Since v4.12.0
 	AutoCreate     bool       `json:"autoCreate"`
 	BOM            string     `json:"bom"`
 }
@@ -110,6 +113,16 @@ func (bs BOMService) PostBom(ctx context.Context, uploadReq BOMUploadRequest) (t
 	}
 	if uploadReq.ProjectVersion != "" {
 		params["projectVersion"] = append(params["projectVersion"], uploadReq.ProjectVersion)
+	}
+	if len(uploadReq.ProjectTags) > 0 {
+		tagNames := make([]string, len(uploadReq.ProjectTags))
+		for i := range uploadReq.ProjectTags {
+			tagNames[i] = uploadReq.ProjectTags[i].Name
+		}
+		params["projectTags"] = append(params["projectTags"], strings.Join(tagNames, ","))
+	}
+	if uploadReq.IsLatest {
+		params["isLatest"] = append(params["isLatest"], "true")
 	}
 	if uploadReq.ParentUUID != nil {
 		params["parentUUID"] = append(params["parentUUID"], uploadReq.ParentUUID.String())
