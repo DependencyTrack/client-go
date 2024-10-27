@@ -25,7 +25,7 @@ type Project struct {
 	Properties         []ProjectProperty   `json:"properties,omitempty"`
 	Tags               []Tag               `json:"tags,omitempty"`
 	Active             bool                `json:"active"`
-	IsLatest           bool                `json:"isLatest"` // Since v4.12.0
+	IsLatest           *bool               `json:"isLatest,omitempty"` // Since v4.12.0
 	Metrics            ProjectMetrics      `json:"metrics"`
 	ParentRef          *ParentRef          `json:"parent,omitempty"`
 	LastBOMImport      int                 `json:"lastBomImport"`
@@ -160,21 +160,33 @@ func (ps ProjectService) GetAllByTag(ctx context.Context, tag string, excludeIna
 }
 
 type ProjectCloneRequest struct {
-	ProjectUUID         uuid.UUID `json:"project"`
-	Version             string    `json:"version"`
-	IncludeAuditHistory bool      `json:"includeAuditHistory"`
-	IncludeComponents   bool      `json:"includeComponents"`
-	IncludeProperties   bool      `json:"includeProperties"`
-	IncludeServices     bool      `json:"includeServices"`
-	IncludeTags         bool      `json:"includeTags"`
+	ProjectUUID             uuid.UUID `json:"project"`
+	Version                 string    `json:"version"`
+	IncludeACL              bool      `json:"includeACL"`
+	IncludeAuditHistory     bool      `json:"includeAuditHistory"`
+	IncludeComponents       bool      `json:"includeComponents"`
+	IncludePolicyViolations *bool     `json:"includePolicyViolations,omitempty"` // Since v4.11.0
+	IncludeProperties       bool      `json:"includeProperties"`
+	IncludeServices         bool      `json:"includeServices"`
+	IncludeTags             bool      `json:"includeTags"`
+	MakeCloneLatest         *bool     `json:"makeCloneLatest,omitempty"` // Since v4.12.0
 }
 
-func (ps ProjectService) Clone(ctx context.Context, cloneReq ProjectCloneRequest) (err error) {
+// Clone triggers a cloning operation.
+// An EventToken is only returned for server versions 4.11.0 and newer.
+func (ps ProjectService) Clone(ctx context.Context, cloneReq ProjectCloneRequest) (token EventToken, err error) {
 	req, err := ps.client.newRequest(ctx, http.MethodPut, "/api/v1/project/clone", withBody(cloneReq))
 	if err != nil {
 		return
 	}
 
-	_, err = ps.client.doRequest(req, nil)
+	if ps.client.isServerVersionAtLeast("4.11.0") {
+		var tokenResponse EventTokenResponse
+		_, err = ps.client.doRequest(req, &tokenResponse)
+		token = tokenResponse.Token
+	} else {
+		_, err = ps.client.doRequest(req, nil)
+	}
+
 	return
 }

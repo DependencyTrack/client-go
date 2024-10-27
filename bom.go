@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 )
 
@@ -21,7 +22,7 @@ type BOMUploadRequest struct {
 	ParentUUID     *uuid.UUID `json:"parentUUID,omitempty"`             // Since v4.8.0
 	ParentName     string     `json:"parentName,omitempty"`             // Since v4.8.0
 	ParentVersion  string     `json:"parentVersion,omitempty"`          // Since v4.8.0
-	IsLatest       bool       `json:"isLatestProjectVersion,omitempty"` // Since v4.12.0
+	IsLatest       *bool      `json:"isLatestProjectVersion,omitempty"` // Since v4.12.0
 	AutoCreate     bool       `json:"autoCreate"`
 	BOM            string     `json:"bom"`
 }
@@ -121,8 +122,8 @@ func (bs BOMService) PostBom(ctx context.Context, uploadReq BOMUploadRequest) (t
 		}
 		params["projectTags"] = append(params["projectTags"], strings.Join(tagNames, ","))
 	}
-	if uploadReq.IsLatest {
-		params["isLatest"] = append(params["isLatest"], "true")
+	if uploadReq.IsLatest != nil {
+		params["isLatest"] = append(params["isLatest"], strconv.FormatBool(*uploadReq.IsLatest))
 	}
 	if uploadReq.ParentUUID != nil {
 		params["parentUUID"] = append(params["parentUUID"], uploadReq.ParentUUID.String())

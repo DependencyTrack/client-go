@@ -124,7 +124,7 @@ func (c Client) isServerVersionAtLeast(targetVersion string) bool {
 	// and doesn't support "-SNAPSHOT" suffixes.
 	targetVersionNormalized := fmt.Sprintf("v%s", targetVersion)
 	actualVersionNormalized := fmt.Sprintf("v%s", strings.TrimSuffix(c.about.Version, "-SNAPSHOT"))
-	return semver.Compare(targetVersionNormalized, actualVersionNormalized) >= 0
+	return semver.Compare(targetVersionNormalized, actualVersionNormalized) <= 0
 }
 
 func (c Client) assertServerVersionAtLeast(targetVersion string) error {

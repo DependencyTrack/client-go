@@ -2,6 +2,7 @@ package dtrack
 
 import (
 	"context"
+	"fmt"
 	"github.com/google/uuid"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
@@ -31,15 +32,21 @@ func TestAboutService_Get(t *testing.T) {
 }
 
 type testContainerOptions struct {
+	Version        string
 	APIPermissions []string
 }
 
 func setUpContainer(t *testing.T, options testContainerOptions) *Client {
 	ctx := context.Background()
 
+	version := "latest"
+	if options.Version != "" {
+		version = options.Version
+	}
+
 	container, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
 		ContainerRequest: testcontainers.ContainerRequest{
-			Image: "dependencytrack/apiserver:latest",
+			Image: fmt.Sprintf("dependencytrack/apiserver:%s", version),
 			Env: map[string]string{
 				"JAVA_OPTIONS":                     "-Xmx1g",
 				"SYSTEM_REQUIREMENT_CHECK_ENABLED": "false",

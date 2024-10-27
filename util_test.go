@@ -2,6 +2,7 @@ package dtrack
 
 import (
 	"errors"
+	"github.com/stretchr/testify/require"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -102,4 +103,13 @@ func TestForEach_HandlerFuncErr(t *testing.T) {
 	); !errors.Is(err, testErr) {
 		t.Errorf("expected error from handlerFunc but got nil")
 	}
+}
+
+func TestOptionalBoolOf(t *testing.T) {
+	require.True(t, *OptionalBoolOf(true))
+	require.False(t, *OptionalBoolOf(false))
+}
+
+func TestOptionalBool(t *testing.T) {
+	require.Nil(t, OptionalBool())
 }

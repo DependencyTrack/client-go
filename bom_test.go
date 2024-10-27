@@ -23,7 +23,7 @@ func TestBOMService_Upload(t *testing.T) {
 			{Name: "foo"},
 			{Name: "bar"},
 		},
-		IsLatest:   true,
+		IsLatest:   OptionalBoolOf(true),
 		AutoCreate: true,
 		BOM: base64.StdEncoding.EncodeToString([]byte(`
 {
@@ -39,7 +39,8 @@ func TestBOMService_Upload(t *testing.T) {
 	require.NoError(t, err)
 	require.Contains(t, project.Tags, Tag{Name: "foo"})
 	require.Contains(t, project.Tags, Tag{Name: "bar"})
-	require.True(t, project.IsLatest)
+	require.NotNil(t, project.IsLatest)
+	require.True(t, *project.IsLatest)
 }
 
 func TestBOMService_PostBom(t *testing.T) {
@@ -58,7 +59,7 @@ func TestBOMService_PostBom(t *testing.T) {
 			{Name: "foo"},
 			{Name: "bar"},
 		},
-		IsLatest:   true,
+		IsLatest:   OptionalBoolOf(true),
 		AutoCreate: true,
 		BOM: `
 {
@@ -74,5 +75,6 @@ func TestBOMService_PostBom(t *testing.T) {
 	require.NoError(t, err)
 	require.Contains(t, project.Tags, Tag{Name: "foo"})
 	require.Contains(t, project.Tags, Tag{Name: "bar"})
-	require.True(t, project.IsLatest)
+	require.NotNil(t, project.IsLatest)
+	require.True(t, *project.IsLatest)
 }

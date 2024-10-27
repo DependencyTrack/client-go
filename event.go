@@ -12,6 +12,10 @@ type EventService struct {
 
 type EventToken string
 
+type EventTokenResponse struct {
+	Token EventToken `json:"token"`
+}
+
 type eventProcessingResponse struct {
 	Processing bool `json:"processing"`
 }

@@ -48,3 +48,11 @@ func ForEach[T any](pageFetchFunc func(po PageOptions) (Page[T], error), handler
 
 	return
 }
+
+func OptionalBoolOf(value bool) *bool {
+	return &value
+}
+
+func OptionalBool() *bool {
+	return nil
+}
