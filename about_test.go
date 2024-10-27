@@ -12,7 +12,7 @@ import (
 )
 
 func TestAboutService_Get(t *testing.T) {
-	_, client := setUpContainer(t)
+	client := setUpContainer(t, testContainerOptions{})
 
 	about, err := client.About.Get(context.TODO())
 	require.NoError(t, err)
@@ -30,7 +30,11 @@ func TestAboutService_Get(t *testing.T) {
 	require.Equal(t, "Alpine", about.Framework.Name)
 }
 
-func setUpContainer(t *testing.T) (testcontainers.Container, *Client) {
+type testContainerOptions struct {
+	APIPermissions []string
+}
+
+func setUpContainer(t *testing.T, options testContainerOptions) *Client {
 	ctx := context.Background()
 
 	container, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
@@ -69,16 +73,13 @@ func setUpContainer(t *testing.T) (testcontainers.Container, *Client) {
 	client, err = NewClient(apiURL, WithBearerToken(bearerToken))
 	require.NoError(t, err)
 
-	// TODO: Pass desired permissions as parameter to setUpContainer
-	team, err := client.Team.Create(ctx, Team{
-		Name: "test",
-		Permissions: []Permission{
-			{
-				Name: "VIEW_PORTFOLIO",
-			},
-		},
-	})
+	team, err := client.Team.Create(ctx, Team{Name: "test"})
 	require.NoError(t, err)
+
+	for _, permissionName := range options.APIPermissions {
+		_, err = client.Permission.AddPermissionToTeam(ctx, Permission{Name: permissionName}, team.UUID)
+		require.NoError(t, err)
+	}
 
 	apiKey, err := client.Team.GenerateAPIKey(ctx, team.UUID)
 	require.NoError(t, err)
@@ -86,5 +87,5 @@ func setUpContainer(t *testing.T) (testcontainers.Container, *Client) {
 	client, err = NewClient(apiURL, WithAPIKey(apiKey))
 	require.NoError(t, err)
 
-	return container, client
+	return client
 }

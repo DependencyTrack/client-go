@@ -8,6 +8,23 @@ import (
 	"github.com/google/uuid"
 )
 
+const (
+	PermissionAccessManagement        = "ACCESS_MANAGEMENT"
+	PermissionBOMUpload               = "BOM_UPLOAD"
+	PermissionPolicyManagement        = "POLICY_MANAGEMENT"
+	PermissionPolicyViolationAnalysis = "POLICY_VIOLATION_ANALYSIS"
+	PermissionPortfolioManagement     = "PORTFOLIO_MANAGEMENT"
+	PermissionProjectCreationUpload   = "PROJECT_CREATION_UPLOAD"
+	PermissionSystemConfiguration     = "SYSTEM_CONFIGURATION"
+	PermissionTagManagement           = "TAG_MANAGEMENT"
+	PermissionViewBadges              = "VIEW_BADGES"
+	PermissionViewPolicyViolation     = "VIEW_POLICY_VIOLATION"
+	PermissionViewPortfolio           = "VIEW_PORTFOLIO"
+	PermissionViewVulnerability       = "VIEW_VULNERABILITY"
+	PermissionVulnerabilityAnalysis   = "VULNERABILITY_ANALYSIS"
+	PermissionVulnerabilityManagement = "VULNERABILITY_MANAGEMENT"
+)
+
 type PermissionService struct {
 	client *Client
 }

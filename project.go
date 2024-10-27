@@ -25,6 +25,7 @@ type Project struct {
 	Properties         []ProjectProperty   `json:"properties,omitempty"`
 	Tags               []Tag               `json:"tags,omitempty"`
 	Active             bool                `json:"active"`
+	IsLatest           bool                `json:"isLatest"` // Since v4.12.0
 	Metrics            ProjectMetrics      `json:"metrics"`
 	ParentRef          *ParentRef          `json:"parent,omitempty"`
 	LastBOMImport      int                 `json:"lastBomImport"`
