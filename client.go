@@ -209,6 +209,13 @@ func withBody(body interface{}) requestOption {
 				return err
 			}
 			contentType = "application/x-www-form-urlencoded"
+		case string:
+			bodyBuf = new(bytes.Buffer)
+			_, err := io.WriteString(bodyBuf, body)
+			contentType = "text/plain"
+			if err != nil {
+				return err
+			}
 		default:
 			bodyBuf = new(bytes.Buffer)
 			if err := json.NewEncoder(bodyBuf).Encode(body); err != nil {
