@@ -31,6 +31,22 @@ func TestAboutService_Get(t *testing.T) {
 	require.Equal(t, "Alpine", about.Framework.Name)
 }
 
+func TestHealth(t *testing.T) {
+	client := setUpContainer(t, testContainerOptions{})
+
+	health, err := client.About.Health(context.TODO())
+	require.NoError(t, err)
+	require.NotNil(t, health)
+
+	require.Equal(t, "UP", health.Status)
+	require.Equal(t, 1, len(health.Checks))
+	require.Equal(t, "database", health.Checks[0].Name)
+	require.Equal(t, "UP", health.Checks[0].Status)
+	require.NotNil(t, health.Checks[0].Data)
+	require.Equal(t, "UP", health.Checks[0].Data.(map[string]interface{})["nontx_connection_pool"])
+	require.Equal(t, "UP", health.Checks[0].Data.(map[string]interface{})["tx_connection_pool"])
+}
+
 type testContainerOptions struct {
 	Version        string
 	APIPermissions []string
