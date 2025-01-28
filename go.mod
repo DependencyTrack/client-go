@@ -1,4 +1,4 @@
-module github.com/rerkcp/client-go
+module github.com/DependencyTrack/client-go
 
 go 1.19
 
