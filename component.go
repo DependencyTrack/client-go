@@ -41,6 +41,7 @@ type Component struct {
 	DirectDependencies string              `json:"directDependencies,omitempty"`
 	Notes              string              `json:"notes,omitempty"`
 	ExternalReferences []ExternalReference `json:"externalReferences,omitempty"`
+	ProjectUUID        uuid.UUID           `json:"project.uuid,omitempty"`
 }
 
 type ExternalReference struct {
