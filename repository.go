@@ -13,6 +13,7 @@ const (
 	RepositoryTypeComposer    = "COMPOSER"
 	RepositoryTypeCpan        = "CPAN"
 	RepositoryTypeGem         = "GEM"
+	RepositoryTypeGithub      = "GITHUB"
 	RepositoryTypeGoModules   = "GO_MODULES"
 	RepositoryTypeHex         = "HEX"
 	RepositoryTypeMaven       = "MAVEN"
@@ -25,15 +26,16 @@ const (
 type RepositoryType string
 
 type Repository struct {
-	Type            RepositoryType `json:"type"`
-	Identifier      string         `json:"identifier"`
-	Url             string         `json:"url"`
-	ResolutionOrder int            `json:"resolutionOrder"`
-	Enabled         bool           `json:"enabled"`
-	Internal        bool           `json:"internal"`
-	Username        string         `json:"username,omitempty"`
-	Password        string         `json:"password,omitempty"`
-	UUID            uuid.UUID      `json:"uuid,omitempty"`
+	Type                   RepositoryType `json:"type"`
+	Identifier             string         `json:"identifier"`
+	Url                    string         `json:"url"`
+	ResolutionOrder        int            `json:"resolutionOrder"`
+	Enabled                bool           `json:"enabled"`
+	Internal               bool           `json:"internal"`
+	AuthenticationRequired bool           `json:"authenticationRequired"`
+	Username               string         `json:"username,omitempty"`
+	Password               string         `json:"password,omitempty"`
+	UUID                   uuid.UUID      `json:"uuid,omitempty"`
 }
 
 type RepositoryMetaComponent struct {
