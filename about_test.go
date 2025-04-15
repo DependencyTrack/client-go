@@ -91,7 +91,7 @@ func setUpContainer(t *testing.T, options testContainerOptions) *Client {
 	apiKey, err := client.Team.GenerateAPIKey(ctx, team.UUID)
 	require.NoError(t, err)
 
-	client, err = NewClient(apiURL, WithAPIKey(apiKey))
+	client, err = NewClient(apiURL, WithAPIKey(apiKey.Key))
 	require.NoError(t, err)
 
 	return client
