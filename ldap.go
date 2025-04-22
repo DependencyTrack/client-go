@@ -21,8 +21,8 @@ type LdapUser struct {
 }
 
 type MappedLdapGroupRequest struct {
-	Team              string `json:"team"`
-	DistinguishedName string `json:"group"`
+	Team              uuid.UUID `json:"team"`
+	DistinguishedName string    `json:"dn"`
 }
 
 type MappedLdapGroup struct {
@@ -56,7 +56,8 @@ func (s LDAPService) GetAllAccessibleGroups(ctx context.Context, po PageOptions)
 		return
 	}
 
-	_, err = s.client.doRequest(req, &gs)
+	res, err := s.client.doRequest(req, &gs.Items)
+	gs.TotalCount = res.TotalCount
 	return
 }
 
@@ -76,7 +77,8 @@ func (s LDAPService) GetUsers(ctx context.Context, po PageOptions) (us Page[Ldap
 		return
 	}
 
-	_, err = s.client.doRequest(req, &us)
+	res, err := s.client.doRequest(req, &us.Items)
+	us.TotalCount = res.TotalCount
 	return
 }
 
