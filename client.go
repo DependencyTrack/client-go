@@ -42,6 +42,7 @@ type Client struct {
 	Config            ConfigService
 	Finding           FindingService
 	Event             EventService
+	LDAP              LDAPService
 	License           LicenseService
 	Metrics           MetricsService
 	OIDC              OIDCService
@@ -91,6 +92,7 @@ func NewClient(baseURL string, options ...ClientOption) (*Client, error) {
 	client.Config = ConfigService{client: &client}
 	client.Finding = FindingService{client: &client}
 	client.Event = EventService{client: &client}
+	client.LDAP = LDAPService{client: &client}
 	client.License = LicenseService{client: &client}
 	client.Metrics = MetricsService{client: &client}
 	client.OIDC = OIDCService{client: &client}
