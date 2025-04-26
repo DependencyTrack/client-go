@@ -36,7 +36,7 @@ type Client struct {
 	about      About
 
 	About             AboutService
-	Acl               AclService
+	ACL               ACLService
 	Analysis          AnalysisService
 	BOM               BOMService
 	Component         ComponentService
@@ -86,7 +86,7 @@ func NewClient(baseURL string, options ...ClientOption) (*Client, error) {
 	}
 
 	client.About = AboutService{client: &client}
-	client.Acl = AclService{client: &client}
+	client.ACL = ACLService{client: &client}
 	client.Analysis = AnalysisService{client: &client}
 	client.BOM = BOMService{client: &client}
 	client.Component = ComponentService{client: &client}
