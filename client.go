@@ -54,6 +54,7 @@ type Client struct {
 	Project           ProjectService
 	ProjectProperty   ProjectPropertyService
 	Repository        RepositoryService
+	Tag               TagService
 	Team              TeamService
 	User              UserService
 	VEX               VEXService
@@ -105,6 +106,7 @@ func NewClient(baseURL string, options ...ClientOption) (*Client, error) {
 	client.Project = ProjectService{client: &client}
 	client.ProjectProperty = ProjectPropertyService{client: &client}
 	client.Repository = RepositoryService{client: &client}
+	client.Tag = TagService{client: &client}
 	client.Team = TeamService{client: &client}
 	client.User = UserService{client: &client}
 	client.VEX = VEXService{client: &client}
@@ -283,6 +285,27 @@ func withPageOptions(po PageOptions) requestOption {
 
 		if po.PageSize > 0 {
 			query.Set("pageSize", strconv.Itoa(po.PageSize))
+		}
+
+		req.URL.RawQuery = query.Encode()
+
+		return nil
+	}
+}
+
+type SortOptions struct {
+	Name  string `json:"sortName"`
+	Order string `json:"sortOrder"`
+}
+
+func withSortOptions(so SortOptions) requestOption {
+	return func(req *http.Request) error {
+		query := req.URL.Query()
+		if len(so.Name) > 0 {
+			query.Set("sortName", so.Name)
+		}
+		if len(so.Order) > 0 {
+			query.Set("sortOrder", so.Order)
 		}
 
 		req.URL.RawQuery = query.Encode()
