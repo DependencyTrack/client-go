@@ -32,9 +32,9 @@ func TestTag(t *testing.T) {
 	require.Equal(t, tags.TotalCount, 2)
 	require.Equal(t, tags.Items[0].Name, "test_bar")
 	require.Equal(t, tags.Items[1].Name, "test_foo")
-	require.Equal(t, tags.Items[0].NotificationRuleCount, 0)
-	require.Equal(t, tags.Items[0].PolicyCount, 0)
-	require.Equal(t, tags.Items[0].ProjectCount, 0)
+	require.Equal(t, tags.Items[0].NotificationRuleCount, int64(0))
+	require.Equal(t, tags.Items[0].PolicyCount, int64(0))
+	require.Equal(t, tags.Items[0].ProjectCount, int64(0))
 
 	err = client.Tag.Delete(context.Background(), []string{"test_bar", "test_foo"})
 	require.NoError(t, err)
