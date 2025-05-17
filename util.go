@@ -49,6 +49,14 @@ func ForEach[T any](pageFetchFunc func(po PageOptions) (Page[T], error), handler
 	return
 }
 
+func Map[T, U any](items []T, transformer func(item T) U) (output []U) {
+	output = []U{}
+	for _, t := range items {
+		output = append(output, transformer(t))
+	}
+	return
+}
+
 func OptionalBoolOf(value bool) *bool {
 	return &value
 }

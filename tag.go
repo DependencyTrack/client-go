@@ -2,7 +2,10 @@ package dtrack
 
 import (
 	"context"
+	"fmt"
 	"net/http"
+
+	"github.com/google/uuid"
 )
 
 type Tag struct {
@@ -51,6 +54,15 @@ func (ts TagService) Delete(ctx context.Context, names []string) (err error) {
 		return
 	}
 
+	_, err = ts.client.doRequest(req, nil)
+	return
+}
+
+func (ts TagService) TagProjects(ctx context.Context, tag string, projects []uuid.UUID) (err error) {
+	req, err := ts.client.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/%s/project", tag), withBody(Map(projects, uuid.UUID.String)))
+	if err != nil {
+		return
+	}
 	_, err = ts.client.doRequest(req, nil)
 	return
 }
