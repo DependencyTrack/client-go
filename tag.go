@@ -35,6 +35,11 @@ type TaggedPolicyListResponseItem struct {
 }
 
 func (ts TagService) Create(ctx context.Context, names []string) (err error) {
+	err = ts.client.assertServerVersionAtLeast("4.13.0")
+	if err != nil {
+		return
+	}
+
 	req, err := ts.client.newRequest(ctx, http.MethodPut, "/api/v1/tag", withBody(names))
 	if err != nil {
 		return
@@ -45,6 +50,11 @@ func (ts TagService) Create(ctx context.Context, names []string) (err error) {
 }
 
 func (ts TagService) GetAll(ctx context.Context, po PageOptions, so SortOptions) (p Page[TagListResponseItem], err error) {
+	err = ts.client.assertServerVersionAtLeast("4.12.0")
+	if err != nil {
+		return
+	}
+
 	req, err := ts.client.newRequest(ctx, http.MethodGet, "/api/v1/tag", withPageOptions(po), withSortOptions(so))
 	if err != nil {
 		return
@@ -60,6 +70,11 @@ func (ts TagService) GetAll(ctx context.Context, po PageOptions, so SortOptions)
 }
 
 func (ts TagService) Delete(ctx context.Context, names []string) (err error) {
+	err = ts.client.assertServerVersionAtLeast("4.12.0")
+	if err != nil {
+		return
+	}
+
 	req, err := ts.client.newRequest(ctx, http.MethodDelete, "/api/v1/tag", withBody(names))
 	if err != nil {
 		return
@@ -70,6 +85,11 @@ func (ts TagService) Delete(ctx context.Context, names []string) (err error) {
 }
 
 func (ts TagService) TagProjects(ctx context.Context, tag string, projects []uuid.UUID) (err error) {
+	err = ts.client.assertServerVersionAtLeast("4.12.0")
+	if err != nil {
+		return
+	}
+
 	req, err := ts.client.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/tag/%s/project", tag), withBody(projects))
 	if err != nil {
 		return
@@ -79,6 +99,11 @@ func (ts TagService) TagProjects(ctx context.Context, tag string, projects []uui
 }
 
 func (ts TagService) UntagProjects(ctx context.Context, tag string, projects []uuid.UUID) (err error) {
+	err = ts.client.assertServerVersionAtLeast("4.12.0")
+	if err != nil {
+		return
+	}
+
 	req, err := ts.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("/api/v1/tag/%s/project", tag), withBody(projects))
 	if err != nil {
 		return
@@ -88,6 +113,11 @@ func (ts TagService) UntagProjects(ctx context.Context, tag string, projects []u
 }
 
 func (ts TagService) GetProjects(ctx context.Context, tag string, po PageOptions, so SortOptions) (p Page[TaggedProjectListResponseItem], err error) {
+	err = ts.client.assertServerVersionAtLeast("4.12.0")
+	if err != nil {
+		return
+	}
+
 	req, err := ts.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/tag/%s/project", tag), withPageOptions(po), withSortOptions(so))
 	if err != nil {
 		return
@@ -103,6 +133,11 @@ func (ts TagService) GetProjects(ctx context.Context, tag string, po PageOptions
 }
 
 func (ts TagService) TagPolicies(ctx context.Context, tag string, policies []uuid.UUID) (err error) {
+	err = ts.client.assertServerVersionAtLeast("4.12.0")
+	if err != nil {
+		return
+	}
+
 	req, err := ts.client.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/tag/%s/policy", tag), withBody(policies))
 	if err != nil {
 		return
@@ -112,6 +147,11 @@ func (ts TagService) TagPolicies(ctx context.Context, tag string, policies []uui
 }
 
 func (ts TagService) UntagPolicies(ctx context.Context, tag string, policies []uuid.UUID) (err error) {
+	err = ts.client.assertServerVersionAtLeast("4.12.0")
+	if err != nil {
+		return
+	}
+
 	req, err := ts.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("/api/v1/tag/%s/policy", tag), withBody(policies))
 	if err != nil {
 		return
@@ -121,6 +161,11 @@ func (ts TagService) UntagPolicies(ctx context.Context, tag string, policies []u
 }
 
 func (ts TagService) GetPolicies(ctx context.Context, tag string, po PageOptions, so SortOptions) (p Page[TaggedPolicyListResponseItem], err error) {
+	err = ts.client.assertServerVersionAtLeast("4.12.0")
+	if err != nil {
+		return
+	}
+
 	req, err := ts.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/tag/%s/policy", tag), withPageOptions(po), withSortOptions(so))
 	if err != nil {
 		return
@@ -136,6 +181,11 @@ func (ts TagService) GetPolicies(ctx context.Context, tag string, po PageOptions
 }
 
 func (ts TagService) TagNotificationRules(ctx context.Context, tag string, rules []uuid.UUID) (err error) {
+	err = ts.client.assertServerVersionAtLeast("4.12.0")
+	if err != nil {
+		return
+	}
+
 	req, err := ts.client.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/tag/%s/notificationRule", tag), withBody(rules))
 	if err != nil {
 		return
@@ -145,6 +195,11 @@ func (ts TagService) TagNotificationRules(ctx context.Context, tag string, rules
 }
 
 func (ts TagService) UntagNotificationRules(ctx context.Context, tag string, rules []uuid.UUID) (err error) {
+	err = ts.client.assertServerVersionAtLeast("4.12.0")
+	if err != nil {
+		return
+	}
+
 	req, err := ts.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("/api/v1/tag/%s/notificationRule", tag), withBody(rules))
 	if err != nil {
 		return
@@ -154,6 +209,11 @@ func (ts TagService) UntagNotificationRules(ctx context.Context, tag string, rul
 }
 
 func (ts TagService) GetNotificationRules(ctx context.Context, tag string, po PageOptions, so SortOptions) (p Page[TaggedPolicyListResponseItem], err error) {
+	err = ts.client.assertServerVersionAtLeast("4.12.0")
+	if err != nil {
+		return
+	}
+
 	req, err := ts.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/tag/%s/notificationRule", tag), withPageOptions(po), withSortOptions(so))
 	if err != nil {
 		return
