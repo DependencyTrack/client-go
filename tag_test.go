@@ -154,8 +154,10 @@ func TestTagPolicies(t *testing.T) {
 	})
 
 	// Setup
-	err := client.Tag.Create(context.Background(), []string{tagName})
-	require.NoError(t, err)
+	{
+		err := client.Tag.Create(context.Background(), []string{tagName})
+		require.NoError(t, err)
+	}
 
 	policy, err := client.Policy.Create(context.Background(), Policy{
 		Name:           policyName,
@@ -166,29 +168,39 @@ func TestTagPolicies(t *testing.T) {
 	require.Equal(t, policy.Name, policyName)
 
 	// Baseline
-	policies, err := client.Tag.GetPolicies(context.Background(), tagName, po, SortOptions{})
-	require.NoError(t, err)
-	require.Equal(t, policies.TotalCount, 0)
-	require.Empty(t, policies.Items)
+	{
+		policies, err := client.Tag.GetPolicies(context.Background(), tagName, po, SortOptions{})
+		require.NoError(t, err)
+		require.Equal(t, policies.TotalCount, 0)
+		require.Empty(t, policies.Items)
+	}
 
 	// Tag
-	err = client.Tag.TagPolicies(context.Background(), tagName, []uuid.UUID{policy.UUID})
-	require.NoError(t, err)
+	{
+		err := client.Tag.TagPolicies(context.Background(), tagName, []uuid.UUID{policy.UUID})
+		require.NoError(t, err)
+	}
 
 	// Check Presence
-	policies, err = client.Tag.GetPolicies(context.Background(), tagName, po, SortOptions{})
-	require.NoError(t, err)
-	require.Equal(t, policies.TotalCount, 1)
-	require.Equal(t, policies.Items[0].UUID, policy.UUID)
-	require.Equal(t, policies.Items[0].Name, policy.Name)
+	{
+		policies, err := client.Tag.GetPolicies(context.Background(), tagName, po, SortOptions{})
+		require.NoError(t, err)
+		require.Equal(t, policies.TotalCount, 1)
+		require.Equal(t, policies.Items[0].UUID, policy.UUID)
+		require.Equal(t, policies.Items[0].Name, policy.Name)
+	}
 
 	// Untag
-	err = client.Tag.UntagPolicies(context.Background(), tagName, []uuid.UUID{policy.UUID})
-	require.NoError(t, err)
+	{
+		err := client.Tag.UntagPolicies(context.Background(), tagName, []uuid.UUID{policy.UUID})
+		require.NoError(t, err)
+	}
 
 	// Check Absence
-	policies, err = client.Tag.GetPolicies(context.Background(), tagName, po, SortOptions{})
-	require.NoError(t, err)
-	require.Equal(t, policies.TotalCount, 0)
-	require.Empty(t, policies.Items)
+	{
+		policies, err := client.Tag.GetPolicies(context.Background(), tagName, po, SortOptions{})
+		require.NoError(t, err)
+		require.Equal(t, policies.TotalCount, 0)
+		require.Empty(t, policies.Items)
+	}
 }

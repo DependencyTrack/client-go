@@ -227,3 +227,29 @@ func (ts TagService) GetNotificationRules(ctx context.Context, tag string, po Pa
 	p.TotalCount = res.TotalCount
 	return
 }
+
+func (ts TagService) GetTagsForPolicy(ctx context.Context, policy uuid.UUID, po PageOptions, so SortOptions) (p Page[Tag], err error) {
+	var req *http.Request
+	if ts.client.isServerVersionAtLeast("4.12.0") {
+		req, err = ts.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/tag/policy/%s", policy), withPageOptions(po), withSortOptions(so))
+	} else {
+		err = ts.client.assertServerVersionAtLeast("4.6.0")
+		if err != nil {
+			return
+		}
+
+		req, err = ts.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/tag/%s", policy), withPageOptions(po), withSortOptions(so))
+	}
+	if err != nil {
+		return
+	}
+
+	res, err := ts.client.doRequest(req, &p.Items)
+	if err != nil {
+		return
+	}
+
+	p.TotalCount = res.TotalCount
+	return
+
+}
