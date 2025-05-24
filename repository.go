@@ -39,7 +39,12 @@ type Repository struct {
 }
 
 type RepositoryMetaComponent struct {
-	LatestVersion string `json:"latestVersion"`
+	RepositoryType string `json:"repositoryType"`
+	Namespace      string `json:"namespace,omitempty"`
+	Name           string `json:"name"`
+	LatestVersion  string `json:"latestVersion"`
+	Published      int    `json:"published"`
+	LastCheck      int    `json:"lastCheck"`
 }
 
 type RepositoryService struct {
