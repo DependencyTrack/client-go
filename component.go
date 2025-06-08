@@ -59,7 +59,31 @@ type ComponentFilterOptions struct {
 	OnlyDirect   bool
 }
 
+type ComponentProperty struct {
+	Group       string    `json:"groupName,omitempty"`
+	Name        string    `json:"propertyName,omitempty"`
+	Value       string    `json:"propertyValue,omitempty"`
+	Type        string    `json:"propertyType"`
+	Description string    `json:"description,omitempty"`
+	UUID        uuid.UUID `json:"uuid"`
+}
+
+type ComponentIdentityQueryOptions struct {
+	Group     string
+	Name      string
+	Version   string
+	PURL      string
+	CPE       string
+	SWIDTagID string
+	Project   uuid.UUID
+}
+
 func (cs ComponentService) Get(ctx context.Context, componentUUID uuid.UUID) (c Component, err error) {
+	err = cs.client.assertServerVersionAtLeast("3.0.0")
+	if err != nil {
+		return
+	}
+
 	req, err := cs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/component/%s", componentUUID))
 	if err != nil {
 		return
@@ -70,6 +94,11 @@ func (cs ComponentService) Get(ctx context.Context, componentUUID uuid.UUID) (c 
 }
 
 func (cs ComponentService) GetAll(ctx context.Context, projectUUID uuid.UUID, po PageOptions, filterOptions ComponentFilterOptions) (p Page[Component], err error) {
+	err = cs.client.assertServerVersionAtLeast("4.0.0")
+	if err != nil {
+		return
+	}
+
 	req, err := cs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/component/project/%s", projectUUID), withPageOptions(po), withComponentFilterOptions(filterOptions))
 	if err != nil {
 		return
@@ -98,10 +127,13 @@ func withComponentFilterOptions(filterOptions ComponentFilterOptions) requestOpt
 	}
 }
 
-func (cs ComponentService) Create(ctx context.Context, projectUUID string, component Component) (c Component, err error) {
-	req, err := cs.client.newRequest(ctx, http.MethodPut,
-		fmt.Sprintf("/api/v1/component/project/%s", projectUUID),
-		withBody(component))
+func (cs ComponentService) Create(ctx context.Context, projectUUID uuid.UUID, component Component) (c Component, err error) {
+	err = cs.client.assertServerVersionAtLeast("3.0.0")
+	if err != nil {
+		return
+	}
+
+	req, err := cs.client.newRequest(ctx, http.MethodPut, fmt.Sprintf("/api/v1/component/project/%s", projectUUID), withBody(component))
 	if err != nil {
 		return
 	}
@@ -111,12 +143,164 @@ func (cs ComponentService) Create(ctx context.Context, projectUUID string, compo
 }
 
 func (cs ComponentService) Update(ctx context.Context, component Component) (c Component, err error) {
-	req, err := cs.client.newRequest(ctx, http.MethodPost,
-		"/api/v1/component",
-		withBody(component))
+	err = cs.client.assertServerVersionAtLeast("3.0.0")
 	if err != nil {
 		return
 	}
+
+	req, err := cs.client.newRequest(ctx, http.MethodPost, "/api/v1/component", withBody(component))
+	if err != nil {
+		return
+	}
+
 	_, err = cs.client.doRequest(req, &c)
+	return
+}
+
+func (cs ComponentService) Delete(ctx context.Context, componentUUID uuid.UUID) (err error) {
+	err = cs.client.assertServerVersionAtLeast("3.0.0")
+	if err != nil {
+		return
+	}
+
+	req, err := cs.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("/api/v1/component/%s", componentUUID))
+	if err != nil {
+		return
+	}
+
+	_, err = cs.client.doRequest(req, nil)
+	return
+}
+
+func (cs ComponentService) GetProperties(ctx context.Context, componentUUID uuid.UUID) (ps []ComponentProperty, err error) {
+	err = cs.client.assertServerVersionAtLeast("4.11.0")
+	if err != nil {
+		return
+	}
+
+	req, err := cs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/component/%s/property", componentUUID))
+	if err != nil {
+		return
+	}
+
+	_, err = cs.client.doRequest(req, &ps)
+	return
+}
+
+func (cs ComponentService) CreateProperty(ctx context.Context, componentUUID uuid.UUID, property ComponentProperty) (p ComponentProperty, err error) {
+	err = cs.client.assertServerVersionAtLeast("4.11.0")
+	if err != nil {
+		return
+	}
+
+	req, err := cs.client.newRequest(ctx, http.MethodPut, fmt.Sprintf("/api/v1/component/%s/property", componentUUID), withBody(property))
+	if err != nil {
+		return
+	}
+
+	_, err = cs.client.doRequest(req, &p)
+	return
+}
+
+func (cs ComponentService) DeleteProperty(ctx context.Context, componentUUID, propertyUUID uuid.UUID) (err error) {
+	err = cs.client.assertServerVersionAtLeast("4.11.0")
+	if err != nil {
+		return
+	}
+
+	req, err := cs.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("/api/v1/component/%s/property/%s", componentUUID, propertyUUID))
+	if err != nil {
+		return
+	}
+
+	_, err = cs.client.doRequest(req, nil)
+	return
+}
+
+func (cs ComponentService) GetByHash(ctx context.Context, hash string, po PageOptions, so SortOptions) (p Page[Component], err error) {
+	err = cs.client.assertServerVersionAtLeast("3.0.0")
+	if err != nil {
+		return
+	}
+
+	req, err := cs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/component/hash/%s", hash), withPageOptions(po), withSortOptions(so))
+	if err != nil {
+		return
+	}
+
+	res, err := cs.client.doRequest(req, &p.Items)
+	if err != nil {
+		return
+	}
+
+	if cs.client.isServerVersionAtLeast("4.0.0") {
+		p.TotalCount = res.TotalCount
+	} else {
+		p.TotalCount = len(p.Items)
+	}
+	return
+}
+
+func (cs ComponentService) GetByIdentity(ctx context.Context, po PageOptions, so SortOptions, io ComponentIdentityQueryOptions) (p Page[Component], err error) {
+	err = cs.client.assertServerVersionAtLeast("4.0.0")
+	if err != nil {
+		return
+	}
+
+	req, err := cs.client.newRequest(ctx, http.MethodGet, "/api/v1/component/identity", withPageOptions(po), withSortOptions(so), withComponentIdentityOptions(io))
+	if err != nil {
+		return
+	}
+
+	res, err := cs.client.doRequest(req, &p.Items)
+	if err != nil {
+		return
+	}
+
+	p.TotalCount = res.TotalCount
+	return
+}
+
+func withComponentIdentityOptions(identityOptions ComponentIdentityQueryOptions) requestOption {
+	return func(req *http.Request) error {
+		query := req.URL.Query()
+		if len(identityOptions.Group) > 0 {
+			query.Set("group", identityOptions.Group)
+		}
+		if len(identityOptions.Name) > 0 {
+			query.Set("name", identityOptions.Name)
+		}
+		if len(identityOptions.Version) > 0 {
+			query.Set("version", identityOptions.Version)
+		}
+		if len(identityOptions.PURL) > 0 {
+			query.Set("purl", identityOptions.PURL)
+		}
+		if len(identityOptions.CPE) > 0 {
+			query.Set("cpe", identityOptions.CPE)
+		}
+		if len(identityOptions.SWIDTagID) > 0 {
+			query.Set("swidTagId", identityOptions.SWIDTagID)
+		}
+		if identityOptions.Project != uuid.Nil {
+			query.Set("project", identityOptions.Project.String())
+		}
+		req.URL.RawQuery = query.Encode()
+		return nil
+	}
+}
+
+func (cs ComponentService) IdentifyInternal(ctx context.Context) (err error) {
+	err = cs.client.assertServerVersionAtLeast("4.0.0")
+	if err != nil {
+		return
+	}
+
+	req, err := cs.client.newRequest(ctx, http.MethodGet, "/api/v1/component/internal/identify")
+	if err != nil {
+		return
+	}
+
+	_, err = cs.client.doRequest(req, nil)
 	return
 }
