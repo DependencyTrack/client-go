@@ -2,6 +2,7 @@ package dtrack
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -42,6 +43,24 @@ type Project struct {
 	ExternalReferences []ExternalReference `json:"externalReferences,omitempty"`
 	CollectionLogic    CollectionLogic     `json:"collectionLogic,omitempty"`
 	CollectionTag      string              `json:"collectionTag,omitempty"`
+}
+
+// Here we write a custom MarshalJSON function to give us more control over the JSON output.
+func (p Project) MarshalJSON() ([]byte, error) {
+	type Alias Project // Avoid infinite recursion
+	aux := struct {
+		Alias
+		LastBOMImport *int `json:"lastBomImport,omitempty"`
+	}{
+		Alias:         (Alias)(p),
+		LastBOMImport: nil,
+	}
+	// In particular, sending a 0 to the API gives us an invalid date
+	// i.e. the beginning of the epoch. Better to be nil.
+	if p.LastBOMImport != 0 {
+		aux.LastBOMImport = &p.LastBOMImport
+	}
+	return json.Marshal(aux)
 }
 
 type ParentRef struct {
