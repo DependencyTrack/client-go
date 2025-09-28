@@ -56,6 +56,7 @@ func TestProjectService_CreateWithCollection(t *testing.T) {
 		Version:         "1.0.0",
 		Active:          true,
 		CollectionLogic: CollectionLogicAggregateDirectChildrenWithTag,
+		CollectionTag:   Tag{Name: tag},
 	})
 	require.NoError(t, err)
 
