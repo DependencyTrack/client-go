@@ -43,7 +43,7 @@ func TestProjectService_CreateWithCollection(t *testing.T) {
 		Name:            "acme-app",
 		Version:         "1.0.0",
 		Active:          true,
-		CollectionLogic: CollectionLogicAggregateDirectChildren,
+		CollectionLogic: &CollectionLogicAggregateDirectChildren,
 	})
 	require.NoError(t, err)
 
@@ -55,8 +55,8 @@ func TestProjectService_CreateWithCollection(t *testing.T) {
 		Name:            "acme-app-2",
 		Version:         "1.0.0",
 		Active:          true,
-		CollectionLogic: CollectionLogicAggregateDirectChildrenWithTag,
-		CollectionTag:   Tag{Name: tag},
+		CollectionLogic: &CollectionLogicAggregateDirectChildrenWithTag,
+		CollectionTag:   &Tag{Name: tag},
 	})
 	require.NoError(t, err)
 

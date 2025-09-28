@@ -40,8 +40,8 @@ type Project struct {
 	ParentRef          *ParentRef          `json:"parent,omitempty"`
 	LastBOMImport      int                 `json:"lastBomImport"`
 	ExternalReferences []ExternalReference `json:"externalReferences,omitempty"`
-	CollectionLogic    CollectionLogic     `json:"collectionLogic,omitempty"`
-	CollectionTag      Tag                 `json:"collectionTag,omitempty"`
+	CollectionLogic    *CollectionLogic    `json:"collectionLogic,omitempty"` // Since v4.13.0
+	CollectionTag      *Tag                `json:"collectionTag,omitempty"`   // Since v4.13.0
 }
 
 type ParentRef struct {
