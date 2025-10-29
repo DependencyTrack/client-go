@@ -211,3 +211,22 @@ func (ps ProjectService) Clone(ctx context.Context, cloneReq ProjectCloneRequest
 
 	return
 }
+
+func (ps ProjectService) GetChildren(ctx context.Context, projectUUID uuid.UUID, po PageOptions) (p Page[Project], err error) {
+	pathParams := map[string]string{
+		"uuid": projectUUID.String(),
+	}
+
+	req, err := ps.client.newRequest(ctx, http.MethodGet, "/api/v1/project/{uuid}/children", withPathParams(pathParams), withPageOptions(po))
+	if err != nil {
+		return
+	}
+
+	res, err := ps.client.doRequest(req, &p.Items)
+	if err != nil {
+		return
+	}
+
+	p.TotalCount = res.TotalCount
+	return
+}
