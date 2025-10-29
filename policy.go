@@ -14,8 +14,8 @@ type Policy struct {
 	Operator         PolicyOperator       `json:"operator"`
 	ViolationState   PolicyViolationState `json:"violationState"`
 	PolicyConditions []PolicyCondition    `json:"policyConditions,omitempty"`
-	IncludeChildren  bool                 `json:"includeChildren,omitempty"`
-	Global           bool                 `json:"global,omitempty"`
+	IncludeChildren  *bool                `json:"includeChildren,omitempty"`
+	Global           *bool                `json:"global,omitempty"`
 	Projects         []Project            `json:"projects,omitempty"`
 	Tags             []Tag                `json:"tags,omitempty"`
 }
