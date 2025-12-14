@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"net/url"
 	"strconv"
 
 	"github.com/google/uuid"
@@ -26,6 +27,19 @@ type OIDCMappingRequest struct {
 type OIDCMapping struct {
 	Group OIDCGroup `json:"group"`
 	UUID  uuid.UUID `json:"uuid"`
+}
+
+type OIDCUser struct {
+	Username          string       `json:"username"`
+	SubjectIdentifier string       `json:"subjectIdentifier"`
+	Email             string       `json:"email"`
+	Teams             []Team       `json:"teams"`
+	Permissions       []Permission `json:"permissions"`
+}
+
+type OIDCTokens struct {
+	ID     string `json:"idToken"`
+	Access string `json:"accessToken,omitempty"`
 }
 
 func (s OIDCService) Available(ctx context.Context) (available bool, err error) {
@@ -120,5 +134,64 @@ func (s OIDCService) RemoveTeamMapping(ctx context.Context, mappingID uuid.UUID)
 	}
 
 	_, err = s.client.doRequest(req, nil)
+	return
+}
+
+func (s OIDCService) RemoveTeamMapping2(ctx context.Context, groupID, teamID uuid.UUID) (err error) {
+	req, err := s.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("/api/v1/oidc/group/%s/team/%s/mapping", groupID.String(), teamID.String()))
+	if err != nil {
+		return
+	}
+
+	_, err = s.client.doRequest(req, nil)
+	return
+}
+
+func (s OIDCService) GetAllUsers(ctx context.Context) (p Page[OIDCUser], err error) {
+	req, err := s.client.newRequest(ctx, http.MethodGet, "/api/v1/user/oidc")
+	if err != nil {
+		return
+	}
+
+	res, err := s.client.doRequest(req, &p.Items)
+	if err != nil {
+		return
+	}
+
+	p.TotalCount = res.TotalCount
+	return
+}
+
+func (s OIDCService) CreateUser(ctx context.Context, userReq OIDCUser) (userRes OIDCUser, err error) {
+	req, err := s.client.newRequest(ctx, http.MethodPut, "/api/v1/user/oidc", withBody(userReq))
+	if err != nil {
+		return
+	}
+
+	_, err = s.client.doRequest(req, &userRes)
+	return
+}
+
+func (s OIDCService) DeleteUser(ctx context.Context, user OIDCUser) (err error) {
+	req, err := s.client.newRequest(ctx, http.MethodDelete, "/api/v1/user/oidc", withBody(user))
+	if err != nil {
+		return
+	}
+
+	_, err = s.client.doRequest(req, nil)
+	return
+}
+
+func (s OIDCService) Login(ctx context.Context, tokens OIDCTokens) (token string, err error) {
+	body := url.Values{}
+	body.Set("idToken", tokens.ID)
+	body.Set("accessToken", tokens.Access)
+
+	req, err := s.client.newRequest(ctx, http.MethodPost, "/api/v1/user/oidc/login", withBody(body))
+	if err != nil {
+		return
+	}
+
+	_, err = s.client.doRequest(req, &token)
 	return
 }

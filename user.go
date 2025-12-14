@@ -2,8 +2,11 @@ package dtrack
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"net/url"
+
+	"github.com/google/uuid"
 )
 
 type UserService struct {
@@ -22,6 +25,19 @@ type ManagedUser struct {
 	Permissions         []Permission `json:"permissions,omitempty"`
 	NewPassword         string       `json:"newPassword,omitempty"`
 	ConfirmPassword     string       `json:"confirmPassword,omitempty"`
+}
+
+type UserPrincipal struct {
+	Teams       []Team       `json:"teams"`
+	Username    string       `json:"username"`
+	Email       string       `json:"email"`
+	Id          int64        `json:"id,omitempty"`
+	Permissions []Permission `json:"permissions"`
+	Name        string       `json:"name"`
+}
+
+type IdentifiableObject struct {
+	UUID uuid.UUID `json:"uuid"`
 }
 
 func (us UserService) Login(ctx context.Context, username, password string) (token string, err error) {
@@ -58,6 +74,7 @@ func (us UserService) ForceChangePassword(ctx context.Context, username, passwor
 	return
 }
 
+// TODO: Add minimum API version checks
 func (us UserService) GetAllManaged(ctx context.Context, po PageOptions) (p Page[ManagedUser], err error) {
 	req, err := us.client.newRequest(ctx, http.MethodGet, "/api/v1/user/managed", withPageOptions(po))
 	if err != nil {
@@ -91,5 +108,49 @@ func (us UserService) DeleteManaged(ctx context.Context, user ManagedUser) (err 
 		return
 	}
 	_, err = us.client.doRequest(req, nil)
+	return
+}
+
+func (us UserService) AddTeamToUser(ctx context.Context, username string, team uuid.UUID) (user UserPrincipal, err error) {
+	req, err := us.client.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/user/%s/membership", username), withBody(IdentifiableObject{
+		UUID: team,
+	}))
+	if err != nil {
+		return
+	}
+
+	_, err = us.client.doRequest(req, &user)
+	return
+}
+
+func (us UserService) RemoveTeamFromUser(ctx context.Context, username string, team uuid.UUID) (user UserPrincipal, err error) {
+	req, err := us.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("/api/v1/user/%s/membership", username), withBody(IdentifiableObject{
+		UUID: team,
+	}))
+	if err != nil {
+		return
+	}
+
+	_, err = us.client.doRequest(req, &user)
+	return
+}
+
+func (us UserService) GetSelf(ctx context.Context) (user UserPrincipal, err error) {
+	req, err := us.client.newRequest(ctx, http.MethodGet, "/api/v1/user/self")
+	if err != nil {
+		return
+	}
+
+	_, err = us.client.doRequest(req, &user)
+	return
+}
+
+func (us UserService) UpdateSelf(ctx context.Context, userReq ManagedUser) (userRes ManagedUser, err error) {
+	req, err := us.client.newRequest(ctx, http.MethodPost, "/api/v1/user/self", withBody(userReq))
+	if err != nil {
+		return
+	}
+
+	_, err = us.client.doRequest(req, &userRes)
 	return
 }
