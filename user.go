@@ -41,6 +41,11 @@ type IdentifiableObject struct {
 }
 
 func (us UserService) Login(ctx context.Context, username, password string) (token string, err error) {
+	err = us.client.assertServerVersionAtLeast("3.0.0")
+	if err != nil {
+		return
+	}
+
 	body := url.Values{}
 	body.Set("username", username)
 	body.Set("password", password)
@@ -57,6 +62,11 @@ func (us UserService) Login(ctx context.Context, username, password string) (tok
 }
 
 func (us UserService) ForceChangePassword(ctx context.Context, username, password, newPassword string) (err error) {
+	err = us.client.assertServerVersionAtLeast("3.0.0")
+	if err != nil {
+		return
+	}
+
 	body := url.Values{}
 	body.Set("username", username)
 	body.Set("password", password)
@@ -74,8 +84,12 @@ func (us UserService) ForceChangePassword(ctx context.Context, username, passwor
 	return
 }
 
-// TODO: Add minimum API version checks
 func (us UserService) GetAllManaged(ctx context.Context, po PageOptions) (p Page[ManagedUser], err error) {
+	err = us.client.assertServerVersionAtLeast("3.0.0")
+	if err != nil {
+		return
+	}
+
 	req, err := us.client.newRequest(ctx, http.MethodGet, "/api/v1/user/managed", withPageOptions(po))
 	if err != nil {
 		return
@@ -85,6 +99,11 @@ func (us UserService) GetAllManaged(ctx context.Context, po PageOptions) (p Page
 }
 
 func (us UserService) CreateManaged(ctx context.Context, usr ManagedUser) (user ManagedUser, err error) {
+	err = us.client.assertServerVersionAtLeast("3.0.0")
+	if err != nil {
+		return
+	}
+
 	req, err := us.client.newRequest(ctx, http.MethodPut, "/api/v1/user/managed", withBody(usr))
 	if err != nil {
 		return
@@ -94,6 +113,11 @@ func (us UserService) CreateManaged(ctx context.Context, usr ManagedUser) (user 
 }
 
 func (us UserService) UpdateManaged(ctx context.Context, usr ManagedUser) (user ManagedUser, err error) {
+	err = us.client.assertServerVersionAtLeast("3.0.0")
+	if err != nil {
+		return
+	}
+
 	req, err := us.client.newRequest(ctx, http.MethodPost, "/api/v1/user/managed", withBody(usr))
 	if err != nil {
 		return
@@ -103,6 +127,11 @@ func (us UserService) UpdateManaged(ctx context.Context, usr ManagedUser) (user 
 }
 
 func (us UserService) DeleteManaged(ctx context.Context, user ManagedUser) (err error) {
+	err = us.client.assertServerVersionAtLeast("3.0.0")
+	if err != nil {
+		return
+	}
+
 	req, err := us.client.newRequest(ctx, http.MethodDelete, "/api/v1/user/managed", withBody(user))
 	if err != nil {
 		return
@@ -112,6 +141,11 @@ func (us UserService) DeleteManaged(ctx context.Context, user ManagedUser) (err 
 }
 
 func (us UserService) AddTeamToUser(ctx context.Context, username string, team uuid.UUID) (user UserPrincipal, err error) {
+	err = us.client.assertServerVersionAtLeast("3.0.0")
+	if err != nil {
+		return
+	}
+
 	req, err := us.client.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/user/%s/membership", username), withBody(IdentifiableObject{
 		UUID: team,
 	}))
@@ -124,6 +158,11 @@ func (us UserService) AddTeamToUser(ctx context.Context, username string, team u
 }
 
 func (us UserService) RemoveTeamFromUser(ctx context.Context, username string, team uuid.UUID) (user UserPrincipal, err error) {
+	err = us.client.assertServerVersionAtLeast("3.0.0")
+	if err != nil {
+		return
+	}
+
 	req, err := us.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("/api/v1/user/%s/membership", username), withBody(IdentifiableObject{
 		UUID: team,
 	}))
@@ -136,6 +175,11 @@ func (us UserService) RemoveTeamFromUser(ctx context.Context, username string, t
 }
 
 func (us UserService) GetSelf(ctx context.Context) (user UserPrincipal, err error) {
+	err = us.client.assertServerVersionAtLeast("3.0.0")
+	if err != nil {
+		return
+	}
+
 	req, err := us.client.newRequest(ctx, http.MethodGet, "/api/v1/user/self")
 	if err != nil {
 		return
@@ -146,6 +190,11 @@ func (us UserService) GetSelf(ctx context.Context) (user UserPrincipal, err erro
 }
 
 func (us UserService) UpdateSelf(ctx context.Context, userReq ManagedUser) (userRes ManagedUser, err error) {
+	err = us.client.assertServerVersionAtLeast("3.0.0")
+	if err != nil {
+		return
+	}
+
 	req, err := us.client.newRequest(ctx, http.MethodPost, "/api/v1/user/self", withBody(userReq))
 	if err != nil {
 		return
