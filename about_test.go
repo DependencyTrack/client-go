@@ -43,8 +43,8 @@ func TestHealth(t *testing.T) {
 	require.Equal(t, "database", health.Checks[0].Name)
 	require.Equal(t, "UP", health.Checks[0].Status)
 	require.NotNil(t, health.Checks[0].Data)
-	require.Equal(t, "UP", health.Checks[0].Data.(map[string]interface{})["nontx_connection_pool"])
-	require.Equal(t, "UP", health.Checks[0].Data.(map[string]interface{})["tx_connection_pool"])
+	require.Equal(t, "UP", health.Checks[0].Data.(map[string]any)["nontx_connection_pool"])
+	require.Equal(t, "UP", health.Checks[0].Data.(map[string]any)["tx_connection_pool"])
 }
 
 type testContainerOptions struct {
