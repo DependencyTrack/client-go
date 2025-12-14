@@ -125,7 +125,7 @@ func TestOIDCTeamMappings(t *testing.T) {
 	}
 
 	// Add Mapping
-	mapping, err = client.OIDC.AddTeamMapping(ctx, OIDCMappingRequest{
+	_, err = client.OIDC.AddTeamMapping(ctx, OIDCMappingRequest{
 		Team:  team.UUID,
 		Group: group.UUID,
 	})

@@ -193,7 +193,7 @@ func withPathParams(params map[string]string) requestOption {
 		}
 
 		for k, v := range params {
-			req.URL.Path = strings.Replace(req.URL.Path, fmt.Sprintf("{%s}", k), v, -1)
+			req.URL.Path = strings.ReplaceAll(req.URL.Path, fmt.Sprintf("{%s}", k), v)
 		}
 		return nil
 	}
