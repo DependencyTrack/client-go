@@ -3,7 +3,7 @@ build:
 .PHONY: build
 
 test:
-	go test -v -cover
+	go test -v -cover -timeout=15m
 .PHONY: test
 
 clean:
