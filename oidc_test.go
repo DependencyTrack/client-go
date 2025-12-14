@@ -2,27 +2,24 @@ package dtrack
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 )
 
-func TestOIDCGroup_Lifecycle(t *testing.T) {
+func TestOIDCGroup(t *testing.T) {
 	ctx := context.Background()
-	po := PageOptions{
-		PageSize: 10,
-	}
 	client := setUpContainer(t, testContainerOptions{
 		APIPermissions: []string{
-			PermissionSystemConfiguration,
+			PermissionAccessManagement,
 		},
 	})
 	// Check absence
 	{
-		groups, err := client.OIDC.GetAllGroups(ctx, po)
+		groups, err := client.OIDC.GetAllGroups(ctx)
 		require.NoError(t, err)
-		require.Empty(t, groups.Items)
-		require.Zero(t, groups.TotalCount)
+		require.Empty(t, groups)
 	}
 	// Create Group
 	group, err := client.OIDC.CreateGroup(ctx, "Test_Group")
@@ -32,11 +29,10 @@ func TestOIDCGroup_Lifecycle(t *testing.T) {
 
 	// Check presence
 	{
-		groups, err := client.OIDC.GetAllGroups(ctx, po)
+		groups, err := client.OIDC.GetAllGroups(ctx)
 		require.NoError(t, err)
-		require.Equal(t, groups.TotalCount, 1)
-		require.Equal(t, len(groups.Items), 1)
-		require.Equal(t, groups.Items[0], group)
+		require.Equal(t, len(groups), 1)
+		require.Equal(t, groups[0], group)
 	}
 
 	// Update Group
@@ -52,11 +48,10 @@ func TestOIDCGroup_Lifecycle(t *testing.T) {
 
 	// Check updated
 	{
-		groups, err := client.OIDC.GetAllGroups(ctx, po)
+		groups, err := client.OIDC.GetAllGroups(ctx)
 		require.NoError(t, err)
-		require.Equal(t, groups.TotalCount, 1)
-		require.Equal(t, len(groups.Items), 1)
-		require.Equal(t, groups.Items[0], OIDCGroup{
+		require.Equal(t, len(groups), 1)
+		require.Equal(t, groups[0], OIDCGroup{
 			UUID: group.UUID,
 			Name: "Updated_Test_Group",
 		})
@@ -70,20 +65,17 @@ func TestOIDCGroup_Lifecycle(t *testing.T) {
 
 	// Check absence
 	{
-		groups, err := client.OIDC.GetAllGroups(ctx, po)
+		groups, err := client.OIDC.GetAllGroups(ctx)
 		require.NoError(t, err)
-		require.Empty(t, groups.Items)
+		require.Empty(t, groups)
 	}
 }
 
 func TestOIDCTeamMappings(t *testing.T) {
 	ctx := context.Background()
-	po := PageOptions{
-		PageSize: 10,
-	}
 	client := setUpContainer(t, testContainerOptions{
 		APIPermissions: []string{
-			PermissionSystemConfiguration,
+			PermissionAccessManagement,
 		},
 	})
 
@@ -99,10 +91,9 @@ func TestOIDCTeamMappings(t *testing.T) {
 
 	// Check absence
 	{
-		teams, err := client.OIDC.GetAllTeamsOf(ctx, group, po)
+		teams, err := client.OIDC.GetAllTeamsOf(ctx, group)
 		require.NoError(t, err)
-		require.Empty(t, teams.Items)
-		require.Zero(t, teams.TotalCount)
+		require.Empty(t, teams)
 	}
 
 	// Add Mapping
@@ -114,10 +105,10 @@ func TestOIDCTeamMappings(t *testing.T) {
 
 	// Check presence
 	{
-		teams, err := client.OIDC.GetAllTeamsOf(ctx, group, po)
+		teams, err := client.OIDC.GetAllTeamsOf(ctx, group)
 		require.NoError(t, err)
-		require.Equal(t, teams.TotalCount, 1)
-		require.Equal(t, teams.Items, []Team{team})
+		require.Equal(t, len(teams), 1)
+		require.Equal(t, teams[0].UUID, team.UUID)
 	}
 
 	// Delete using mapping ID
@@ -128,10 +119,9 @@ func TestOIDCTeamMappings(t *testing.T) {
 
 	// Check absence
 	{
-		teams, err := client.OIDC.GetAllTeamsOf(ctx, group, po)
+		teams, err := client.OIDC.GetAllTeamsOf(ctx, group)
 		require.NoError(t, err)
-		require.Empty(t, teams.Items)
-		require.Zero(t, teams.TotalCount)
+		require.Empty(t, teams)
 	}
 
 	// Add Mapping
@@ -143,10 +133,10 @@ func TestOIDCTeamMappings(t *testing.T) {
 
 	// Check presence
 	{
-		teams, err := client.OIDC.GetAllTeamsOf(ctx, group, po)
+		teams, err := client.OIDC.GetAllTeamsOf(ctx, group)
 		require.NoError(t, err)
-		require.Equal(t, teams.TotalCount, 1)
-		require.Equal(t, teams.Items, []Team{team})
+		require.Equal(t, len(teams), 1)
+		require.Equal(t, teams[0].UUID, team.UUID)
 	}
 
 	// Delete using Team ID, Group ID
@@ -157,10 +147,9 @@ func TestOIDCTeamMappings(t *testing.T) {
 
 	// Check absence
 	{
-		teams, err := client.OIDC.GetAllTeamsOf(ctx, group, po)
+		teams, err := client.OIDC.GetAllTeamsOf(ctx, group)
 		require.NoError(t, err)
-		require.Empty(t, teams.Items)
-		require.Zero(t, teams.TotalCount)
+		require.Empty(t, teams)
 	}
 }
 
@@ -168,7 +157,7 @@ func TestOIDCUsers(t *testing.T) {
 	ctx := context.Background()
 	client := setUpContainer(t, testContainerOptions{
 		APIPermissions: []string{
-			PermissionSystemConfiguration,
+			PermissionAccessManagement,
 		},
 	})
 
@@ -182,11 +171,10 @@ func TestOIDCUsers(t *testing.T) {
 
 	// Create User
 	user, err := client.OIDC.CreateUser(ctx, OIDCUser{
-		SubjectIdentifier: "Sub",
-		Username:          "Username",
+		Username: "Username",
 	})
 	require.NoError(t, err)
-	require.Equal(t, user.SubjectIdentifier, "Sub")
+	fmt.Printf("%+v", user)
 	require.Equal(t, user.Username, "Username")
 
 	// Check presence

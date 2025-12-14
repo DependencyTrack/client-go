@@ -63,24 +63,20 @@ func (s OIDCService) Available(ctx context.Context) (available bool, err error) 
 	return
 }
 
-func (s OIDCService) GetAllGroups(ctx context.Context, po PageOptions) (p Page[OIDCGroup], err error) {
+func (s OIDCService) GetAllGroups(ctx context.Context) (groups []OIDCGroup, err error) {
 	err = s.client.assertServerVersionAtLeast("4.0.0")
 	if err != nil {
 		return
 	}
 
-	req, err := s.client.newRequest(ctx, http.MethodGet, "/api/v1/oidc/group", withPageOptions(po))
+	req, err := s.client.newRequest(ctx, http.MethodGet, "/api/v1/oidc/group")
 	if err != nil {
 		return
 	}
 
-	res, err := s.client.doRequest(req, &p.Items)
-	if err != nil {
-		return
-	}
-
-	p.TotalCount = res.TotalCount
+	_, err = s.client.doRequest(req, &groups)
 	return
+
 }
 
 func (s OIDCService) CreateGroup(ctx context.Context, name string) (g OIDCGroup, err error) {
@@ -127,18 +123,18 @@ func (s OIDCService) DeleteGroup(ctx context.Context, groupUUID uuid.UUID) (err 
 	return
 }
 
-func (s OIDCService) GetAllTeamsOf(ctx context.Context, group OIDCGroup, po PageOptions) (p Page[Team], err error) {
-	req, err := s.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/oidc/group/%s/team", group.UUID.String()), withPageOptions(po))
+func (s OIDCService) GetAllTeamsOf(ctx context.Context, group OIDCGroup) (teams []Team, err error) {
+	err = s.client.assertServerVersionAtLeast("4.0.0")
 	if err != nil {
 		return
 	}
 
-	res, err := s.client.doRequest(req, &p.Items)
+	req, err := s.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/oidc/group/%s/team", group.UUID.String()))
 	if err != nil {
 		return
 	}
 
-	p.TotalCount = res.TotalCount
+	_, err = s.client.doRequest(req, &teams)
 	return
 }
 
