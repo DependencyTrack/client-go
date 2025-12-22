@@ -45,7 +45,7 @@ func (vas ViolationAnalysisService) Get(ctx context.Context, componentUUID, poli
 		"policyViolation": policyViolationUUID.String(),
 	}
 
-	req, err := vas.client.newRequest(ctx, http.MethodGet, "/api/v1/violation/analysis", withParams(params))
+	req, err := vas.client.newRequest(ctx, http.MethodGet, "api/v1/violation/analysis", withParams(params))
 	if err != nil {
 		return
 	}
@@ -55,7 +55,7 @@ func (vas ViolationAnalysisService) Get(ctx context.Context, componentUUID, poli
 }
 
 func (vas ViolationAnalysisService) Update(ctx context.Context, analysisReq ViolationAnalysisRequest) (va ViolationAnalysis, err error) {
-	req, err := vas.client.newRequest(ctx, http.MethodPut, "/api/v1/violation/analysis", withBody(analysisReq))
+	req, err := vas.client.newRequest(ctx, http.MethodPut, "api/v1/violation/analysis", withBody(analysisReq))
 	if err != nil {
 		return
 	}

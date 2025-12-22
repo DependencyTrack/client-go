@@ -82,7 +82,7 @@ func (as AnalysisService) Get(ctx context.Context, component, project, vulnerabi
 		"vulnerability": vulnerability.String(),
 	}
 
-	req, err := as.client.newRequest(ctx, http.MethodGet, "/api/v1/analysis", withParams(params))
+	req, err := as.client.newRequest(ctx, http.MethodGet, "api/v1/analysis", withParams(params))
 	if err != nil {
 		return
 	}
@@ -92,7 +92,7 @@ func (as AnalysisService) Get(ctx context.Context, component, project, vulnerabi
 }
 
 func (as AnalysisService) Create(ctx context.Context, analysisReq AnalysisRequest) (a Analysis, err error) {
-	req, err := as.client.newRequest(ctx, http.MethodPut, "/api/v1/analysis", withBody(analysisReq))
+	req, err := as.client.newRequest(ctx, http.MethodPut, "api/v1/analysis", withBody(analysisReq))
 	if err != nil {
 		return
 	}

@@ -48,7 +48,7 @@ func (s OIDCService) Available(ctx context.Context) (available bool, err error) 
 		return
 	}
 
-	req, err := s.client.newRequest(ctx, http.MethodGet, "/api/v1/oidc/available", withAcceptContentType("text/plain"))
+	req, err := s.client.newRequest(ctx, http.MethodGet, "api/v1/oidc/available", withAcceptContentType("text/plain"))
 	if err != nil {
 		return
 	}
@@ -69,7 +69,7 @@ func (s OIDCService) GetAllGroups(ctx context.Context) (groups []OIDCGroup, err 
 		return
 	}
 
-	req, err := s.client.newRequest(ctx, http.MethodGet, "/api/v1/oidc/group")
+	req, err := s.client.newRequest(ctx, http.MethodGet, "api/v1/oidc/group")
 	if err != nil {
 		return
 	}
@@ -85,7 +85,7 @@ func (s OIDCService) CreateGroup(ctx context.Context, name string) (g OIDCGroup,
 		return
 	}
 
-	req, err := s.client.newRequest(ctx, http.MethodPut, "/api/v1/oidc/group", withBody(OIDCGroup{Name: name}))
+	req, err := s.client.newRequest(ctx, http.MethodPut, "api/v1/oidc/group", withBody(OIDCGroup{Name: name}))
 	if err != nil {
 		return
 	}
@@ -99,7 +99,7 @@ func (s OIDCService) UpdateGroup(ctx context.Context, group OIDCGroup) (g OIDCGr
 		return
 	}
 
-	req, err := s.client.newRequest(ctx, http.MethodPost, "/api/v1/oidc/group", withBody(group))
+	req, err := s.client.newRequest(ctx, http.MethodPost, "api/v1/oidc/group", withBody(group))
 	if err != nil {
 		return
 	}
@@ -114,7 +114,7 @@ func (s OIDCService) DeleteGroup(ctx context.Context, groupUUID uuid.UUID) (err 
 		return
 	}
 
-	req, err := s.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("/api/v1/oidc/group/%s", groupUUID.String()))
+	req, err := s.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("api/v1/oidc/group/%s", groupUUID.String()))
 	if err != nil {
 		return
 	}
@@ -129,7 +129,7 @@ func (s OIDCService) GetAllTeamsOf(ctx context.Context, group OIDCGroup) (teams 
 		return
 	}
 
-	req, err := s.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/oidc/group/%s/team", group.UUID.String()))
+	req, err := s.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/oidc/group/%s/team", group.UUID.String()))
 	if err != nil {
 		return
 	}
@@ -144,7 +144,7 @@ func (s OIDCService) AddTeamMapping(ctx context.Context, mapping OIDCMappingRequ
 		return
 	}
 
-	req, err := s.client.newRequest(ctx, http.MethodPut, "/api/v1/oidc/mapping", withBody(mapping))
+	req, err := s.client.newRequest(ctx, http.MethodPut, "api/v1/oidc/mapping", withBody(mapping))
 	if err != nil {
 		return
 	}
@@ -159,7 +159,7 @@ func (s OIDCService) RemoveTeamMapping(ctx context.Context, mappingID uuid.UUID)
 		return
 	}
 
-	req, err := s.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("/api/v1/oidc/mapping/%s", mappingID.String()))
+	req, err := s.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("api/v1/oidc/mapping/%s", mappingID.String()))
 	if err != nil {
 		return
 	}
@@ -174,7 +174,7 @@ func (s OIDCService) RemoveTeamMapping2(ctx context.Context, groupID, teamID uui
 		return
 	}
 
-	req, err := s.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("/api/v1/oidc/group/%s/team/%s/mapping", groupID.String(), teamID.String()))
+	req, err := s.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("api/v1/oidc/group/%s/team/%s/mapping", groupID.String(), teamID.String()))
 	if err != nil {
 		return
 	}
@@ -189,7 +189,7 @@ func (s OIDCService) GetAllUsers(ctx context.Context) (p Page[OIDCUser], err err
 		return
 	}
 
-	req, err := s.client.newRequest(ctx, http.MethodGet, "/api/v1/user/oidc")
+	req, err := s.client.newRequest(ctx, http.MethodGet, "api/v1/user/oidc")
 	if err != nil {
 		return
 	}
@@ -209,7 +209,7 @@ func (s OIDCService) CreateUser(ctx context.Context, userReq OIDCUser) (userRes 
 		return
 	}
 
-	req, err := s.client.newRequest(ctx, http.MethodPut, "/api/v1/user/oidc", withBody(userReq))
+	req, err := s.client.newRequest(ctx, http.MethodPut, "api/v1/user/oidc", withBody(userReq))
 	if err != nil {
 		return
 	}
@@ -224,7 +224,7 @@ func (s OIDCService) DeleteUser(ctx context.Context, user OIDCUser) (err error) 
 		return
 	}
 
-	req, err := s.client.newRequest(ctx, http.MethodDelete, "/api/v1/user/oidc", withBody(user))
+	req, err := s.client.newRequest(ctx, http.MethodDelete, "api/v1/user/oidc", withBody(user))
 	if err != nil {
 		return
 	}
@@ -243,7 +243,7 @@ func (s OIDCService) Login(ctx context.Context, tokens OIDCTokens) (token string
 	body.Set("idToken", tokens.ID)
 	body.Set("accessToken", tokens.Access)
 
-	req, err := s.client.newRequest(ctx, http.MethodPost, "/api/v1/user/oidc/login", withBody(body))
+	req, err := s.client.newRequest(ctx, http.MethodPost, "api/v1/user/oidc/login", withBody(body))
 	if err != nil {
 		return
 	}

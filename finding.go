@@ -72,7 +72,7 @@ func (f FindingService) GetAll(ctx context.Context, projectUUID uuid.UUID, suppr
 		"suppressed": strconv.FormatBool(suppressed),
 	}
 
-	req, err := f.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/finding/project/%s", projectUUID), withParams(params), withPageOptions(po))
+	req, err := f.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/finding/project/%s", projectUUID), withParams(params), withPageOptions(po))
 	if err != nil {
 		return
 	}
@@ -88,7 +88,7 @@ func (f FindingService) GetAll(ctx context.Context, projectUUID uuid.UUID, suppr
 
 // ExportFPF exports the findings of a given project in the File Packaging Format (FPF).
 func (f FindingService) ExportFPF(ctx context.Context, projectUUID uuid.UUID) (d []byte, err error) {
-	req, err := f.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/finding/project/%s/export", projectUUID))
+	req, err := f.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/finding/project/%s/export", projectUUID))
 	if err != nil {
 		return
 	}
@@ -106,7 +106,7 @@ func (f FindingService) ExportFPF(ctx context.Context, projectUUID uuid.UUID) (d
 // AnalyzeProject triggers an analysis for a given project.
 // This feature is available in Dependency-Track v4.7.0 and newer.
 func (f FindingService) AnalyzeProject(ctx context.Context, projectUUID uuid.UUID) (token BOMUploadToken, err error) {
-	req, err := f.client.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/finding/project/%s/analyze", projectUUID))
+	req, err := f.client.newRequest(ctx, http.MethodPost, fmt.Sprintf("api/v1/finding/project/%s/analyze", projectUUID))
 	if err != nil {
 		return
 	}

@@ -50,7 +50,7 @@ func (us UserService) Login(ctx context.Context, username, password string) (tok
 	body.Set("username", username)
 	body.Set("password", password)
 
-	req, err := us.client.newRequest(ctx, http.MethodPost, "/api/v1/user/login", withBody(body))
+	req, err := us.client.newRequest(ctx, http.MethodPost, "api/v1/user/login", withBody(body))
 	if err != nil {
 		return
 	}
@@ -73,7 +73,7 @@ func (us UserService) ForceChangePassword(ctx context.Context, username, passwor
 	body.Set("newPassword", newPassword)
 	body.Set("confirmPassword", newPassword)
 
-	req, err := us.client.newRequest(ctx, http.MethodPost, "/api/v1/user/forceChangePassword", withBody(body))
+	req, err := us.client.newRequest(ctx, http.MethodPost, "api/v1/user/forceChangePassword", withBody(body))
 	if err != nil {
 		return
 	}

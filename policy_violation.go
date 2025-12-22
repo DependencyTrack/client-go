@@ -28,7 +28,7 @@ func (pvs PolicyViolationService) GetAll(ctx context.Context, suppressed bool, p
 		"suppressed": strconv.FormatBool(suppressed),
 	}
 
-	req, err := pvs.client.newRequest(ctx, http.MethodGet, "/api/v1/violation", withParams(params), withPageOptions(po))
+	req, err := pvs.client.newRequest(ctx, http.MethodGet, "api/v1/violation", withParams(params), withPageOptions(po))
 	if err != nil {
 		return
 	}
@@ -47,7 +47,7 @@ func (pvs PolicyViolationService) GetAllForProject(ctx context.Context, projectU
 		"suppressed": strconv.FormatBool(suppressed),
 	}
 
-	req, err := pvs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/violation/project/%s", projectUUID), withParams(params), withPageOptions(po))
+	req, err := pvs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/violation/project/%s", projectUUID), withParams(params), withPageOptions(po))
 	if err != nil {
 		return
 	}
@@ -66,7 +66,7 @@ func (pvs PolicyViolationService) GetAllForComponent(ctx context.Context, compon
 		"suppressed": strconv.FormatBool(suppressed),
 	}
 
-	req, err := pvs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/violation/component/%s", componentUUID), withParams(params), withPageOptions(po))
+	req, err := pvs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/violation/component/%s", componentUUID), withParams(params), withPageOptions(po))
 	if err != nil {
 		return
 	}

@@ -53,7 +53,7 @@ type ProjectService struct {
 }
 
 func (ps ProjectService) Get(ctx context.Context, projectUUID uuid.UUID) (p Project, err error) {
-	req, err := ps.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/project/%s", projectUUID))
+	req, err := ps.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/project/%s", projectUUID))
 	if err != nil {
 		return
 	}
@@ -63,7 +63,7 @@ func (ps ProjectService) Get(ctx context.Context, projectUUID uuid.UUID) (p Proj
 }
 
 func (ps ProjectService) GetAll(ctx context.Context, po PageOptions) (p Page[Project], err error) {
-	req, err := ps.client.newRequest(ctx, http.MethodGet, "/api/v1/project", withPageOptions(po))
+	req, err := ps.client.newRequest(ctx, http.MethodGet, "api/v1/project", withPageOptions(po))
 	if err != nil {
 		return
 	}
@@ -78,7 +78,7 @@ func (ps ProjectService) GetAll(ctx context.Context, po PageOptions) (p Page[Pro
 }
 
 func (ps ProjectService) Latest(ctx context.Context, name string) (p Project, err error) {
-	req, err := ps.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/project/latest/%s", url.PathEscape(name)))
+	req, err := ps.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/project/latest/%s", url.PathEscape(name)))
 	if err != nil {
 		return
 	}
@@ -93,7 +93,7 @@ func (ps ProjectService) GetProjectsForName(ctx context.Context, name string, ex
 		"onlyRoot":        strconv.FormatBool(onlyRoot),
 	}
 
-	req, err := ps.client.newRequest(ctx, http.MethodGet, "/api/v1/project", withParams(params))
+	req, err := ps.client.newRequest(ctx, http.MethodGet, "api/v1/project", withParams(params))
 	if err != nil {
 		return
 	}
@@ -103,7 +103,7 @@ func (ps ProjectService) GetProjectsForName(ctx context.Context, name string, ex
 }
 
 func (ps ProjectService) Create(ctx context.Context, project Project) (p Project, err error) {
-	req, err := ps.client.newRequest(ctx, http.MethodPut, "/api/v1/project", withBody(project))
+	req, err := ps.client.newRequest(ctx, http.MethodPut, "api/v1/project", withBody(project))
 	if err != nil {
 		return
 	}
@@ -113,7 +113,7 @@ func (ps ProjectService) Create(ctx context.Context, project Project) (p Project
 }
 
 func (ps ProjectService) Patch(ctx context.Context, projectUUID uuid.UUID, project Project) (p Project, err error) {
-	req, err := ps.client.newRequest(ctx, http.MethodPatch, fmt.Sprintf("/api/v1/project/%s", projectUUID), withBody(project))
+	req, err := ps.client.newRequest(ctx, http.MethodPatch, fmt.Sprintf("api/v1/project/%s", projectUUID), withBody(project))
 	if err != nil {
 		return
 	}
@@ -123,7 +123,7 @@ func (ps ProjectService) Patch(ctx context.Context, projectUUID uuid.UUID, proje
 }
 
 func (ps ProjectService) Update(ctx context.Context, project Project) (p Project, err error) {
-	req, err := ps.client.newRequest(ctx, http.MethodPost, "/api/v1/project", withBody(project))
+	req, err := ps.client.newRequest(ctx, http.MethodPost, "api/v1/project", withBody(project))
 	if err != nil {
 		return
 	}
@@ -133,7 +133,7 @@ func (ps ProjectService) Update(ctx context.Context, project Project) (p Project
 }
 
 func (ps ProjectService) Delete(ctx context.Context, projectUUID uuid.UUID) (err error) {
-	req, err := ps.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("/api/v1/project/%s", projectUUID))
+	req, err := ps.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("api/v1/project/%s", projectUUID))
 	if err != nil {
 		return
 	}
@@ -148,7 +148,7 @@ func (ps ProjectService) Lookup(ctx context.Context, name, version string) (p Pr
 		"version": version,
 	}
 
-	req, err := ps.client.newRequest(ctx, http.MethodGet, "/api/v1/project/lookup", withParams(params))
+	req, err := ps.client.newRequest(ctx, http.MethodGet, "api/v1/project/lookup", withParams(params))
 	if err != nil {
 		return
 	}
@@ -166,7 +166,7 @@ func (ps ProjectService) GetAllByTag(ctx context.Context, tag string, excludeIna
 		"onlyRoot":        strconv.FormatBool(onlyRoot),
 	}
 
-	req, err := ps.client.newRequest(ctx, http.MethodGet, "/api/v1/project/tag/{tag}", withPathParams(pathParams), withParams(params), withPageOptions(po))
+	req, err := ps.client.newRequest(ctx, http.MethodGet, "api/v1/project/tag/{tag}", withPathParams(pathParams), withParams(params), withPageOptions(po))
 	if err != nil {
 		return
 	}
@@ -196,7 +196,7 @@ type ProjectCloneRequest struct {
 // Clone triggers a cloning operation.
 // An EventToken is only returned for server versions 4.11.0 and newer.
 func (ps ProjectService) Clone(ctx context.Context, cloneReq ProjectCloneRequest) (token EventToken, err error) {
-	req, err := ps.client.newRequest(ctx, http.MethodPut, "/api/v1/project/clone", withBody(cloneReq))
+	req, err := ps.client.newRequest(ctx, http.MethodPut, "api/v1/project/clone", withBody(cloneReq))
 	if err != nil {
 		return
 	}
@@ -209,5 +209,24 @@ func (ps ProjectService) Clone(ctx context.Context, cloneReq ProjectCloneRequest
 		_, err = ps.client.doRequest(req, nil)
 	}
 
+	return
+}
+
+func (ps ProjectService) GetChildren(ctx context.Context, projectUUID uuid.UUID, po PageOptions) (p Page[Project], err error) {
+	pathParams := map[string]string{
+		"uuid": projectUUID.String(),
+	}
+
+	req, err := ps.client.newRequest(ctx, http.MethodGet, "api/v1/project/{uuid}/children", withPathParams(pathParams), withPageOptions(po))
+	if err != nil {
+		return
+	}
+
+	res, err := ps.client.doRequest(req, &p.Items)
+	if err != nil {
+		return
+	}
+
+	p.TotalCount = res.TotalCount
 	return
 }

@@ -26,7 +26,7 @@ type vexUploadResponse struct {
 type VEXUploadToken string
 
 func (vs VEXService) ExportCycloneDX(ctx context.Context, projectUUID uuid.UUID) (vex string, err error) {
-	req, err := vs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/vex/cyclonedx/project/%s", projectUUID))
+	req, err := vs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/vex/cyclonedx/project/%s", projectUUID))
 	if err != nil {
 		return
 	}
@@ -38,7 +38,7 @@ func (vs VEXService) ExportCycloneDX(ctx context.Context, projectUUID uuid.UUID)
 }
 
 func (vs VEXService) Upload(ctx context.Context, uploadReq VEXUploadRequest) (token VEXUploadToken, err error) {
-	req, err := vs.client.newRequest(ctx, http.MethodPut, "/api/v1/vex", withBody(uploadReq))
+	req, err := vs.client.newRequest(ctx, http.MethodPut, "api/v1/vex", withBody(uploadReq))
 	if err != nil {
 		return
 	}

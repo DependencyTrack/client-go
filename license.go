@@ -26,7 +26,7 @@ type LicenseService struct {
 }
 
 func (l LicenseService) GetAll(ctx context.Context, po PageOptions) (p Page[License], err error) {
-	req, err := l.client.newRequest(ctx, http.MethodGet, "/api/v1/license", withPageOptions(po))
+	req, err := l.client.newRequest(ctx, http.MethodGet, "api/v1/license", withPageOptions(po))
 	if err != nil {
 		return
 	}

@@ -40,7 +40,7 @@ const (
 )
 
 func (ps PolicyService) Get(ctx context.Context, policyUUID uuid.UUID) (p Policy, err error) {
-	req, err := ps.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/policy/%s", policyUUID))
+	req, err := ps.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/policy/%s", policyUUID))
 	if err != nil {
 		return
 	}
@@ -50,7 +50,7 @@ func (ps PolicyService) Get(ctx context.Context, policyUUID uuid.UUID) (p Policy
 }
 
 func (ps PolicyService) GetAll(ctx context.Context, po PageOptions) (p Page[Policy], err error) {
-	req, err := ps.client.newRequest(ctx, http.MethodGet, "/api/v1/policy", withPageOptions(po))
+	req, err := ps.client.newRequest(ctx, http.MethodGet, "api/v1/policy", withPageOptions(po))
 	if err != nil {
 		return
 	}
@@ -65,7 +65,7 @@ func (ps PolicyService) GetAll(ctx context.Context, po PageOptions) (p Page[Poli
 }
 
 func (ps PolicyService) Create(ctx context.Context, policy Policy) (p Policy, err error) {
-	req, err := ps.client.newRequest(ctx, http.MethodPut, "/api/v1/policy", withBody(policy))
+	req, err := ps.client.newRequest(ctx, http.MethodPut, "api/v1/policy", withBody(policy))
 	if err != nil {
 		return
 	}
@@ -75,7 +75,7 @@ func (ps PolicyService) Create(ctx context.Context, policy Policy) (p Policy, er
 }
 
 func (ps PolicyService) Delete(ctx context.Context, policyUUID uuid.UUID) (err error) {
-	req, err := ps.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("/api/v1/policy/%s", policyUUID))
+	req, err := ps.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("api/v1/policy/%s", policyUUID))
 	if err != nil {
 		return
 	}
@@ -85,7 +85,7 @@ func (ps PolicyService) Delete(ctx context.Context, policyUUID uuid.UUID) (err e
 }
 
 func (ps PolicyService) Update(ctx context.Context, policy Policy) (p Policy, err error) {
-	req, err := ps.client.newRequest(ctx, http.MethodPost, "/api/v1/policy", withBody(policy))
+	req, err := ps.client.newRequest(ctx, http.MethodPost, "api/v1/policy", withBody(policy))
 	if err != nil {
 		return
 	}
@@ -95,7 +95,7 @@ func (ps PolicyService) Update(ctx context.Context, policy Policy) (p Policy, er
 }
 
 func (ps PolicyService) AddProject(ctx context.Context, policyUUID, projectUUID uuid.UUID) (p Policy, err error) {
-	req, err := ps.client.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/policy/%s/project/%s", policyUUID, projectUUID))
+	req, err := ps.client.newRequest(ctx, http.MethodPost, fmt.Sprintf("api/v1/policy/%s/project/%s", policyUUID, projectUUID))
 	if err != nil {
 		return
 	}
@@ -105,7 +105,7 @@ func (ps PolicyService) AddProject(ctx context.Context, policyUUID, projectUUID 
 }
 
 func (ps PolicyService) DeleteProject(ctx context.Context, policyUUID, projectUUID uuid.UUID) (p Policy, err error) {
-	req, err := ps.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("/api/v1/policy/%s/project/%s", policyUUID, projectUUID))
+	req, err := ps.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("api/v1/policy/%s/project/%s", policyUUID, projectUUID))
 	if err != nil {
 		return
 	}
@@ -115,7 +115,7 @@ func (ps PolicyService) DeleteProject(ctx context.Context, policyUUID, projectUU
 }
 
 func (ps PolicyService) AddTag(ctx context.Context, policyUUID uuid.UUID, tagName string) (p Policy, err error) {
-	req, err := ps.client.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/policy/%s/tag/%s", policyUUID, tagName))
+	req, err := ps.client.newRequest(ctx, http.MethodPost, fmt.Sprintf("api/v1/policy/%s/tag/%s", policyUUID, tagName))
 	if err != nil {
 		return
 	}
@@ -125,7 +125,7 @@ func (ps PolicyService) AddTag(ctx context.Context, policyUUID uuid.UUID, tagNam
 }
 
 func (ps PolicyService) DeleteTag(ctx context.Context, policyUUID uuid.UUID, tagName string) (p Policy, err error) {
-	req, err := ps.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("/api/v1/policy/%s/tag/%s", policyUUID, tagName))
+	req, err := ps.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("api/v1/policy/%s/tag/%s", policyUUID, tagName))
 	if err != nil {
 		return
 	}

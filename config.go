@@ -20,7 +20,7 @@ type ConfigService struct {
 }
 
 func (cs ConfigService) GetAll(ctx context.Context) (cps []ConfigProperty, err error) {
-	req, err := cs.client.newRequest(ctx, http.MethodGet, "/api/v1/configProperty")
+	req, err := cs.client.newRequest(ctx, http.MethodGet, "api/v1/configProperty")
 	if err != nil {
 		return
 	}
@@ -46,7 +46,7 @@ func (cs ConfigService) Get(ctx context.Context, groupName, propertyName string)
 }
 
 func (cs ConfigService) Update(ctx context.Context, config ConfigProperty) (cp ConfigProperty, err error) {
-	req, err := cs.client.newRequest(ctx, http.MethodPost, "/api/v1/configProperty", withBody(config))
+	req, err := cs.client.newRequest(ctx, http.MethodPost, "api/v1/configProperty", withBody(config))
 	if err != nil {
 		return
 	}
@@ -55,7 +55,7 @@ func (cs ConfigService) Update(ctx context.Context, config ConfigProperty) (cp C
 }
 
 func (cs ConfigService) UpdateAll(ctx context.Context, configs []ConfigProperty) (cps []ConfigProperty, err error) {
-	req, err := cs.client.newRequest(ctx, http.MethodPost, "/api/v1/configProperty/aggregate", withBody(configs))
+	req, err := cs.client.newRequest(ctx, http.MethodPost, "api/v1/configProperty/aggregate", withBody(configs))
 	if err != nil {
 		return
 	}

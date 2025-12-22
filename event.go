@@ -27,7 +27,7 @@ func (es EventService) IsBeingProcessed(ctx context.Context, token EventToken) (
 		return false, err
 	}
 
-	req, err := es.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/event/token/%s", token))
+	req, err := es.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/event/token/%s", token))
 	if err != nil {
 		return false, err
 	}

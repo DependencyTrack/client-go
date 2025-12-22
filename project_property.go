@@ -21,7 +21,7 @@ type ProjectPropertyService struct {
 }
 
 func (ps ProjectPropertyService) GetAll(ctx context.Context, projectUUID uuid.UUID, po PageOptions) (p Page[ProjectProperty], err error) {
-	req, err := ps.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/project/%s/property", projectUUID), withPageOptions(po))
+	req, err := ps.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/project/%s/property", projectUUID), withPageOptions(po))
 	if err != nil {
 		return
 	}
@@ -36,7 +36,7 @@ func (ps ProjectPropertyService) GetAll(ctx context.Context, projectUUID uuid.UU
 }
 
 func (ps ProjectPropertyService) Create(ctx context.Context, projectUUID uuid.UUID, property ProjectProperty) (p ProjectProperty, err error) {
-	req, err := ps.client.newRequest(ctx, http.MethodPut, fmt.Sprintf("/api/v1/project/%s/property", projectUUID), withBody(property))
+	req, err := ps.client.newRequest(ctx, http.MethodPut, fmt.Sprintf("api/v1/project/%s/property", projectUUID), withBody(property))
 	if err != nil {
 		return
 	}
@@ -46,7 +46,7 @@ func (ps ProjectPropertyService) Create(ctx context.Context, projectUUID uuid.UU
 }
 
 func (ps ProjectPropertyService) Update(ctx context.Context, projectUUID uuid.UUID, property ProjectProperty) (p ProjectProperty, err error) {
-	req, err := ps.client.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/project/%s/property", projectUUID), withBody(property))
+	req, err := ps.client.newRequest(ctx, http.MethodPost, fmt.Sprintf("api/v1/project/%s/property", projectUUID), withBody(property))
 	if err != nil {
 		return
 	}
@@ -61,7 +61,7 @@ func (ps ProjectPropertyService) Delete(ctx context.Context, projectUUID uuid.UU
 		Name:  propertyName,
 	}
 
-	req, err := ps.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("/api/v1/project/%s/property", projectUUID), withBody(property))
+	req, err := ps.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("api/v1/project/%s/property", projectUUID), withBody(property))
 	if err != nil {
 		return
 	}

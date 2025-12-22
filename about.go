@@ -39,7 +39,7 @@ type AboutService struct {
 }
 
 func (as AboutService) Get(ctx context.Context) (a About, err error) {
-	req, err := as.client.newRequest(ctx, http.MethodGet, "/api/version", withoutAuth())
+	req, err := as.client.newRequest(ctx, http.MethodGet, "api/version", withoutAuth())
 	if err != nil {
 		return
 	}
@@ -49,7 +49,7 @@ func (as AboutService) Get(ctx context.Context) (a About, err error) {
 }
 
 func (as AboutService) Health(ctx context.Context) (h Health, err error) {
-	req, err := as.client.newRequest(ctx, http.MethodGet, "/health", withoutAuth())
+	req, err := as.client.newRequest(ctx, http.MethodGet, "health", withoutAuth())
 	if err != nil {
 		return
 	}

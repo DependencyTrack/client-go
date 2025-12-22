@@ -31,7 +31,7 @@ type MappedLdapGroup struct {
 }
 
 func (s LDAPService) AddMapping(ctx context.Context, mapping MappedLdapGroupRequest) (g MappedLdapGroup, err error) {
-	req, err := s.client.newRequest(ctx, http.MethodPut, "/api/v1/ldap/mapping", withBody(mapping))
+	req, err := s.client.newRequest(ctx, http.MethodPut, "api/v1/ldap/mapping", withBody(mapping))
 	if err != nil {
 		return
 	}
@@ -41,7 +41,7 @@ func (s LDAPService) AddMapping(ctx context.Context, mapping MappedLdapGroupRequ
 }
 
 func (s LDAPService) RemoveMapping(ctx context.Context, mappingId uuid.UUID) (err error) {
-	req, err := s.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("/api/v1/ldap/mapping/%s", mappingId.String()))
+	req, err := s.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("api/v1/ldap/mapping/%s", mappingId.String()))
 	if err != nil {
 		return
 	}
@@ -51,7 +51,7 @@ func (s LDAPService) RemoveMapping(ctx context.Context, mappingId uuid.UUID) (er
 }
 
 func (s LDAPService) GetAllAccessibleGroups(ctx context.Context, po PageOptions) (gs Page[string], err error) {
-	req, err := s.client.newRequest(ctx, http.MethodGet, "/api/v1/ldap/groups", withPageOptions(po))
+	req, err := s.client.newRequest(ctx, http.MethodGet, "api/v1/ldap/groups", withPageOptions(po))
 	if err != nil {
 		return
 	}
@@ -62,7 +62,7 @@ func (s LDAPService) GetAllAccessibleGroups(ctx context.Context, po PageOptions)
 }
 
 func (s LDAPService) GetTeamMappings(ctx context.Context, teamUUID uuid.UUID) (gs []MappedLdapGroup, err error) {
-	req, err := s.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/ldap/team/%s", teamUUID.String()))
+	req, err := s.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/ldap/team/%s", teamUUID.String()))
 	if err != nil {
 		return
 	}
@@ -72,7 +72,7 @@ func (s LDAPService) GetTeamMappings(ctx context.Context, teamUUID uuid.UUID) (g
 }
 
 func (s LDAPService) GetUsers(ctx context.Context, po PageOptions) (us Page[LdapUser], err error) {
-	req, err := s.client.newRequest(ctx, http.MethodGet, "/api/v1/user/ldap", withPageOptions(po))
+	req, err := s.client.newRequest(ctx, http.MethodGet, "api/v1/user/ldap", withPageOptions(po))
 	if err != nil {
 		return
 	}
@@ -83,7 +83,7 @@ func (s LDAPService) GetUsers(ctx context.Context, po PageOptions) (us Page[Ldap
 }
 
 func (s LDAPService) CreateUser(ctx context.Context, user LdapUser) (userOut LdapUser, err error) {
-	req, err := s.client.newRequest(ctx, http.MethodPut, "/api/v1/user/ldap", withBody(user))
+	req, err := s.client.newRequest(ctx, http.MethodPut, "api/v1/user/ldap", withBody(user))
 	if err != nil {
 		return
 	}
@@ -93,7 +93,7 @@ func (s LDAPService) CreateUser(ctx context.Context, user LdapUser) (userOut Lda
 }
 
 func (s LDAPService) DeleteUser(ctx context.Context, user LdapUser) (err error) {
-	req, err := s.client.newRequest(ctx, http.MethodDelete, "/api/v1/user/ldap", withBody(user))
+	req, err := s.client.newRequest(ctx, http.MethodDelete, "api/v1/user/ldap", withBody(user))
 	if err != nil {
 		return
 	}

@@ -56,7 +56,7 @@ func (rs RepositoryService) GetMetaComponent(ctx context.Context, purl string) (
 		"purl": purl,
 	}
 
-	req, err := rs.client.newRequest(ctx, http.MethodGet, "/api/v1/repository/latest", withParams(params))
+	req, err := rs.client.newRequest(ctx, http.MethodGet, "api/v1/repository/latest", withParams(params))
 	if err != nil {
 		return
 	}
@@ -66,7 +66,7 @@ func (rs RepositoryService) GetMetaComponent(ctx context.Context, purl string) (
 }
 
 func (rs RepositoryService) GetAll(ctx context.Context, po PageOptions) (p Page[Repository], err error) {
-	req, err := rs.client.newRequest(ctx, http.MethodGet, "/api/v1/repository", withPageOptions(po))
+	req, err := rs.client.newRequest(ctx, http.MethodGet, "api/v1/repository", withPageOptions(po))
 	if err != nil {
 		return
 	}
@@ -81,7 +81,7 @@ func (rs RepositoryService) GetAll(ctx context.Context, po PageOptions) (p Page[
 }
 
 func (rs RepositoryService) GetByType(ctx context.Context, repoType RepositoryType, po PageOptions) (p Page[Repository], err error) {
-	req, err := rs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/repository/%s", repoType), withPageOptions(po))
+	req, err := rs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/repository/%s", repoType), withPageOptions(po))
 	if err != nil {
 		return
 	}
@@ -96,7 +96,7 @@ func (rs RepositoryService) GetByType(ctx context.Context, repoType RepositoryTy
 }
 
 func (rs RepositoryService) Create(ctx context.Context, repo Repository) (r Repository, err error) {
-	req, err := rs.client.newRequest(ctx, http.MethodPut, "/api/v1/repository", withBody(repo))
+	req, err := rs.client.newRequest(ctx, http.MethodPut, "api/v1/repository", withBody(repo))
 	if err != nil {
 		return
 	}
@@ -105,7 +105,7 @@ func (rs RepositoryService) Create(ctx context.Context, repo Repository) (r Repo
 	return
 }
 func (rs RepositoryService) Update(ctx context.Context, repo Repository) (r Repository, err error) {
-	req, err := rs.client.newRequest(ctx, http.MethodPost, "/api/v1/repository", withBody(repo))
+	req, err := rs.client.newRequest(ctx, http.MethodPost, "api/v1/repository", withBody(repo))
 	if err != nil {
 		return
 	}
@@ -115,7 +115,7 @@ func (rs RepositoryService) Update(ctx context.Context, repo Repository) (r Repo
 }
 
 func (rs RepositoryService) Delete(ctx context.Context, reposUUID uuid.UUID) (err error) {
-	req, err := rs.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("/api/v1/repository/%s", reposUUID.String()))
+	req, err := rs.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("api/v1/repository/%s", reposUUID.String()))
 	if err != nil {
 		return
 	}

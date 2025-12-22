@@ -82,7 +82,7 @@ type MetricsService struct {
 }
 
 func (ms MetricsService) LatestPortfolioMetrics(ctx context.Context) (m PortfolioMetrics, err error) {
-	req, err := ms.client.newRequest(ctx, http.MethodGet, "/api/v1/metrics/portfolio/current")
+	req, err := ms.client.newRequest(ctx, http.MethodGet, "api/v1/metrics/portfolio/current")
 	if err != nil {
 		return
 	}
@@ -92,7 +92,7 @@ func (ms MetricsService) LatestPortfolioMetrics(ctx context.Context) (m Portfoli
 }
 
 func (ms MetricsService) PortfolioMetricsSince(ctx context.Context, date time.Time) (m []PortfolioMetrics, err error) {
-	req, err := ms.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/metrics/portfolio/since/%s", date.Format("20060102")))
+	req, err := ms.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/metrics/portfolio/since/%s", date.Format("20060102")))
 	if err != nil {
 		return
 	}
@@ -102,7 +102,7 @@ func (ms MetricsService) PortfolioMetricsSince(ctx context.Context, date time.Ti
 }
 
 func (ms MetricsService) PortfolioMetricsSinceDays(ctx context.Context, days uint) (m []PortfolioMetrics, err error) {
-	req, err := ms.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/metrics/portfolio/%d/days", days))
+	req, err := ms.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/metrics/portfolio/%d/days", days))
 	if err != nil {
 		return nil, err
 	}
@@ -112,7 +112,7 @@ func (ms MetricsService) PortfolioMetricsSinceDays(ctx context.Context, days uin
 }
 
 func (ms MetricsService) RefreshPortfolioMetrics(ctx context.Context) (err error) {
-	req, err := ms.client.newRequest(ctx, http.MethodGet, "/api/v1/metrics/portfolio/refresh")
+	req, err := ms.client.newRequest(ctx, http.MethodGet, "api/v1/metrics/portfolio/refresh")
 	if err != nil {
 		return
 	}
@@ -122,7 +122,7 @@ func (ms MetricsService) RefreshPortfolioMetrics(ctx context.Context) (err error
 }
 
 func (ms MetricsService) LatestProjectMetrics(ctx context.Context, projectUUID uuid.UUID) (m ProjectMetrics, err error) {
-	req, err := ms.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/metrics/project/%s/current", projectUUID))
+	req, err := ms.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/metrics/project/%s/current", projectUUID))
 	if err != nil {
 		return
 	}
@@ -132,7 +132,7 @@ func (ms MetricsService) LatestProjectMetrics(ctx context.Context, projectUUID u
 }
 
 func (ms MetricsService) ProjectMetricsSince(ctx context.Context, projectUUID uuid.UUID, date time.Time) (m []ProjectMetrics, err error) {
-	req, err := ms.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/metrics/project/%s/since/%s", projectUUID, date.Format("20060102")))
+	req, err := ms.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/metrics/project/%s/since/%s", projectUUID, date.Format("20060102")))
 	if err != nil {
 		return
 	}
@@ -142,7 +142,7 @@ func (ms MetricsService) ProjectMetricsSince(ctx context.Context, projectUUID uu
 }
 
 func (ms MetricsService) ProjectMetricsSinceDays(ctx context.Context, projectUUID uuid.UUID, days uint) (m []ProjectMetrics, err error) {
-	req, err := ms.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/metrics/project/%s/days/%d", projectUUID, days))
+	req, err := ms.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/metrics/project/%s/days/%d", projectUUID, days))
 	if err != nil {
 		return nil, err
 	}
@@ -152,7 +152,7 @@ func (ms MetricsService) ProjectMetricsSinceDays(ctx context.Context, projectUUI
 }
 
 func (ms MetricsService) RefreshProjectMetrics(ctx context.Context, projectUUID uuid.UUID) (err error) {
-	req, err := ms.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/metrics/project/%s/refresh", projectUUID))
+	req, err := ms.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/metrics/project/%s/refresh", projectUUID))
 	if err != nil {
 		return
 	}

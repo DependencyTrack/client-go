@@ -54,7 +54,7 @@ func (bs BOMService) ExportComponent(ctx context.Context, componentUUID uuid.UUI
 		params["format"] = string(format)
 	}
 
-	req, err := bs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/bom/cyclonedx/component/%s", componentUUID), withParams(params))
+	req, err := bs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/bom/cyclonedx/component/%s", componentUUID), withParams(params))
 	if err != nil {
 		return
 	}
@@ -74,7 +74,7 @@ func (bs BOMService) ExportProject(ctx context.Context, projectUUID uuid.UUID, f
 		params["variant"] = string(variant)
 	}
 
-	req, err := bs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/bom/cyclonedx/project/%s", projectUUID), withParams(params))
+	req, err := bs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/bom/cyclonedx/project/%s", projectUUID), withParams(params))
 	if err != nil {
 		return
 	}
@@ -86,7 +86,7 @@ func (bs BOMService) ExportProject(ctx context.Context, projectUUID uuid.UUID, f
 }
 
 func (bs BOMService) Upload(ctx context.Context, uploadReq BOMUploadRequest) (token BOMUploadToken, err error) {
-	req, err := bs.client.newRequest(ctx, http.MethodPut, "/api/v1/bom", withBody(uploadReq))
+	req, err := bs.client.newRequest(ctx, http.MethodPut, "api/v1/bom", withBody(uploadReq))
 	if err != nil {
 		return
 	}
@@ -138,7 +138,7 @@ func (bs BOMService) PostBom(ctx context.Context, uploadReq BOMUploadRequest) (t
 		params["bom"] = append(params["bom"], uploadReq.BOM)
 	}
 
-	req, err := bs.client.newRequest(ctx, http.MethodPost, "/api/v1/bom", withMultiPart(params))
+	req, err := bs.client.newRequest(ctx, http.MethodPost, "api/v1/bom", withMultiPart(params))
 	if err != nil {
 		return
 	}
@@ -165,7 +165,7 @@ func (bs BOMService) IsBeingProcessed(ctx context.Context, token BOMUploadToken)
 		return bs.client.Event.IsBeingProcessed(ctx, EventToken(token))
 	}
 
-	req, err := bs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/bom/token/%s", token))
+	req, err := bs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/bom/token/%s", token))
 	if err != nil {
 		return false, err
 	}

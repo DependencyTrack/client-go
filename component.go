@@ -84,7 +84,7 @@ func (cs ComponentService) Get(ctx context.Context, componentUUID uuid.UUID) (c 
 		return
 	}
 
-	req, err := cs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/component/%s", componentUUID))
+	req, err := cs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/component/%s", componentUUID))
 	if err != nil {
 		return
 	}
@@ -99,7 +99,7 @@ func (cs ComponentService) GetAll(ctx context.Context, projectUUID uuid.UUID, po
 		return
 	}
 
-	req, err := cs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/component/project/%s", projectUUID), withPageOptions(po), withComponentFilterOptions(filterOptions))
+	req, err := cs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/component/project/%s", projectUUID), withPageOptions(po), withComponentFilterOptions(filterOptions))
 	if err != nil {
 		return
 	}
@@ -133,7 +133,7 @@ func (cs ComponentService) Create(ctx context.Context, projectUUID uuid.UUID, co
 		return
 	}
 
-	req, err := cs.client.newRequest(ctx, http.MethodPut, fmt.Sprintf("/api/v1/component/project/%s", projectUUID), withBody(component))
+	req, err := cs.client.newRequest(ctx, http.MethodPut, fmt.Sprintf("api/v1/component/project/%s", projectUUID), withBody(component))
 	if err != nil {
 		return
 	}
@@ -148,7 +148,7 @@ func (cs ComponentService) Update(ctx context.Context, component Component) (c C
 		return
 	}
 
-	req, err := cs.client.newRequest(ctx, http.MethodPost, "/api/v1/component", withBody(component))
+	req, err := cs.client.newRequest(ctx, http.MethodPost, "api/v1/component", withBody(component))
 	if err != nil {
 		return
 	}
@@ -163,7 +163,7 @@ func (cs ComponentService) Delete(ctx context.Context, componentUUID uuid.UUID) 
 		return
 	}
 
-	req, err := cs.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("/api/v1/component/%s", componentUUID))
+	req, err := cs.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("api/v1/component/%s", componentUUID))
 	if err != nil {
 		return
 	}
@@ -178,7 +178,7 @@ func (cs ComponentService) GetProperties(ctx context.Context, componentUUID uuid
 		return
 	}
 
-	req, err := cs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/component/%s/property", componentUUID))
+	req, err := cs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/component/%s/property", componentUUID))
 	if err != nil {
 		return
 	}
@@ -193,7 +193,7 @@ func (cs ComponentService) CreateProperty(ctx context.Context, componentUUID uui
 		return
 	}
 
-	req, err := cs.client.newRequest(ctx, http.MethodPut, fmt.Sprintf("/api/v1/component/%s/property", componentUUID), withBody(property))
+	req, err := cs.client.newRequest(ctx, http.MethodPut, fmt.Sprintf("api/v1/component/%s/property", componentUUID), withBody(property))
 	if err != nil {
 		return
 	}
@@ -208,7 +208,7 @@ func (cs ComponentService) DeleteProperty(ctx context.Context, componentUUID, pr
 		return
 	}
 
-	req, err := cs.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("/api/v1/component/%s/property/%s", componentUUID, propertyUUID))
+	req, err := cs.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("api/v1/component/%s/property/%s", componentUUID, propertyUUID))
 	if err != nil {
 		return
 	}
@@ -223,7 +223,7 @@ func (cs ComponentService) GetByHash(ctx context.Context, hash string, po PageOp
 		return
 	}
 
-	req, err := cs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/component/hash/%s", hash), withPageOptions(po), withSortOptions(so))
+	req, err := cs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/component/hash/%s", hash), withPageOptions(po), withSortOptions(so))
 	if err != nil {
 		return
 	}
@@ -247,7 +247,7 @@ func (cs ComponentService) GetByIdentity(ctx context.Context, po PageOptions, so
 		return
 	}
 
-	req, err := cs.client.newRequest(ctx, http.MethodGet, "/api/v1/component/identity", withPageOptions(po), withSortOptions(so), withComponentIdentityOptions(io))
+	req, err := cs.client.newRequest(ctx, http.MethodGet, "api/v1/component/identity", withPageOptions(po), withSortOptions(so), withComponentIdentityOptions(io))
 	if err != nil {
 		return
 	}
@@ -296,7 +296,7 @@ func (cs ComponentService) IdentifyInternal(ctx context.Context) (err error) {
 		return
 	}
 
-	req, err := cs.client.newRequest(ctx, http.MethodGet, "/api/v1/component/internal/identify")
+	req, err := cs.client.newRequest(ctx, http.MethodGet, "api/v1/component/internal/identify")
 	if err != nil {
 		return
 	}

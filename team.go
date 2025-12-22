@@ -31,7 +31,7 @@ type TeamService struct {
 }
 
 func (ts TeamService) Get(ctx context.Context, teamUUID uuid.UUID) (t Team, err error) {
-	req, err := ts.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/team/%s", teamUUID))
+	req, err := ts.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/team/%s", teamUUID))
 	if err != nil {
 		return
 	}
@@ -41,7 +41,7 @@ func (ts TeamService) Get(ctx context.Context, teamUUID uuid.UUID) (t Team, err 
 }
 
 func (ts TeamService) GetAll(ctx context.Context, po PageOptions) (p Page[Team], err error) {
-	req, err := ts.client.newRequest(ctx, http.MethodGet, "/api/v1/team", withPageOptions(po))
+	req, err := ts.client.newRequest(ctx, http.MethodGet, "api/v1/team", withPageOptions(po))
 	if err != nil {
 		return
 	}
@@ -56,7 +56,7 @@ func (ts TeamService) GetAll(ctx context.Context, po PageOptions) (p Page[Team],
 }
 
 func (ts TeamService) GenerateAPIKey(ctx context.Context, teamUUID uuid.UUID) (apiKey APIKey, err error) {
-	req, err := ts.client.newRequest(ctx, http.MethodPut, fmt.Sprintf("/api/v1/team/%s/key", teamUUID))
+	req, err := ts.client.newRequest(ctx, http.MethodPut, fmt.Sprintf("api/v1/team/%s/key", teamUUID))
 	if err != nil {
 		return
 	}
@@ -66,7 +66,7 @@ func (ts TeamService) GenerateAPIKey(ctx context.Context, teamUUID uuid.UUID) (a
 }
 
 func (ts TeamService) DeleteAPIKey(ctx context.Context, publicIdOrKey string) (err error) {
-	req, err := ts.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("/api/v1/team/key/%s", publicIdOrKey))
+	req, err := ts.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("api/v1/team/key/%s", publicIdOrKey))
 	if err != nil {
 		return
 	}
@@ -75,7 +75,7 @@ func (ts TeamService) DeleteAPIKey(ctx context.Context, publicIdOrKey string) (e
 }
 
 func (ts TeamService) UpdateAPIKeyComment(ctx context.Context, publicIdOrKey, comment string) (commentOut string, err error) {
-	req, err := ts.client.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/team/key/%s/comment", publicIdOrKey), withBody(comment))
+	req, err := ts.client.newRequest(ctx, http.MethodPost, fmt.Sprintf("api/v1/team/key/%s/comment", publicIdOrKey), withBody(comment))
 	if err != nil {
 		return
 	}
@@ -101,7 +101,7 @@ func (ts TeamService) GetAPIKeys(ctx context.Context, teamUUID uuid.UUID) (keys 
 }
 
 func (ts TeamService) Create(ctx context.Context, team Team) (t Team, err error) {
-	req, err := ts.client.newRequest(ctx, http.MethodPut, "/api/v1/team", withBody(team))
+	req, err := ts.client.newRequest(ctx, http.MethodPut, "api/v1/team", withBody(team))
 	if err != nil {
 		return
 	}
@@ -111,7 +111,7 @@ func (ts TeamService) Create(ctx context.Context, team Team) (t Team, err error)
 }
 
 func (ts TeamService) Update(ctx context.Context, team Team) (t Team, err error) {
-	req, err := ts.client.newRequest(ctx, http.MethodPost, "/api/v1/team", withBody(team))
+	req, err := ts.client.newRequest(ctx, http.MethodPost, "api/v1/team", withBody(team))
 	if err != nil {
 		return
 	}
@@ -121,7 +121,7 @@ func (ts TeamService) Update(ctx context.Context, team Team) (t Team, err error)
 }
 
 func (ts TeamService) Delete(ctx context.Context, team Team) (err error) {
-	req, err := ts.client.newRequest(ctx, http.MethodDelete, "/api/v1/team", withBody(team))
+	req, err := ts.client.newRequest(ctx, http.MethodDelete, "api/v1/team", withBody(team))
 	if err != nil {
 		return
 	}
