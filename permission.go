@@ -69,7 +69,7 @@ func (ps PermissionService) RemovePermissionFromTeam(ctx context.Context, permis
 }
 
 func (ps PermissionService) AddPermissionToUser(ctx context.Context, permission Permission, username string) (user UserPrincipal, err error) {
-	req, err := ps.client.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/permission/%s/user/%s", permission.Name, username))
+	req, err := ps.client.newRequest(ctx, http.MethodPost, fmt.Sprintf("api/v1/permission/%s/user/%s", permission.Name, username))
 	if err != nil {
 		return
 	}
@@ -79,7 +79,7 @@ func (ps PermissionService) AddPermissionToUser(ctx context.Context, permission 
 }
 
 func (ps PermissionService) RemovePermissionFromUser(ctx context.Context, permission Permission, username string) (user UserPrincipal, err error) {
-	req, err := ps.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("/api/v1/permission/%s/user/%s", permission.Name, username))
+	req, err := ps.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("api/v1/permission/%s/user/%s", permission.Name, username))
 	if err != nil {
 		return
 	}

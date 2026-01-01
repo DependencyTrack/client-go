@@ -90,7 +90,7 @@ func (us UserService) GetAllManaged(ctx context.Context, po PageOptions) (p Page
 		return
 	}
 
-	req, err := us.client.newRequest(ctx, http.MethodGet, "/api/v1/user/managed", withPageOptions(po))
+	req, err := us.client.newRequest(ctx, http.MethodGet, "api/v1/user/managed", withPageOptions(po))
 	if err != nil {
 		return
 	}
@@ -104,7 +104,7 @@ func (us UserService) CreateManaged(ctx context.Context, usr ManagedUser) (user 
 		return
 	}
 
-	req, err := us.client.newRequest(ctx, http.MethodPut, "/api/v1/user/managed", withBody(usr))
+	req, err := us.client.newRequest(ctx, http.MethodPut, "api/v1/user/managed", withBody(usr))
 	if err != nil {
 		return
 	}
@@ -118,7 +118,7 @@ func (us UserService) UpdateManaged(ctx context.Context, usr ManagedUser) (user 
 		return
 	}
 
-	req, err := us.client.newRequest(ctx, http.MethodPost, "/api/v1/user/managed", withBody(usr))
+	req, err := us.client.newRequest(ctx, http.MethodPost, "api/v1/user/managed", withBody(usr))
 	if err != nil {
 		return
 	}
@@ -132,7 +132,7 @@ func (us UserService) DeleteManaged(ctx context.Context, user ManagedUser) (err 
 		return
 	}
 
-	req, err := us.client.newRequest(ctx, http.MethodDelete, "/api/v1/user/managed", withBody(user))
+	req, err := us.client.newRequest(ctx, http.MethodDelete, "api/v1/user/managed", withBody(user))
 	if err != nil {
 		return
 	}
@@ -146,7 +146,7 @@ func (us UserService) AddTeamToUser(ctx context.Context, username string, team u
 		return
 	}
 
-	req, err := us.client.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/user/%s/membership", username), withBody(IdentifiableObject{
+	req, err := us.client.newRequest(ctx, http.MethodPost, fmt.Sprintf("api/v1/user/%s/membership", username), withBody(IdentifiableObject{
 		UUID: team,
 	}))
 	if err != nil {
@@ -163,7 +163,7 @@ func (us UserService) RemoveTeamFromUser(ctx context.Context, username string, t
 		return
 	}
 
-	req, err := us.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("/api/v1/user/%s/membership", username), withBody(IdentifiableObject{
+	req, err := us.client.newRequest(ctx, http.MethodDelete, fmt.Sprintf("api/v1/user/%s/membership", username), withBody(IdentifiableObject{
 		UUID: team,
 	}))
 	if err != nil {
@@ -180,7 +180,7 @@ func (us UserService) GetSelf(ctx context.Context) (user UserPrincipal, err erro
 		return
 	}
 
-	req, err := us.client.newRequest(ctx, http.MethodGet, "/api/v1/user/self")
+	req, err := us.client.newRequest(ctx, http.MethodGet, "api/v1/user/self")
 	if err != nil {
 		return
 	}
@@ -195,7 +195,7 @@ func (us UserService) UpdateSelf(ctx context.Context, userReq ManagedUser) (user
 		return
 	}
 
-	req, err := us.client.newRequest(ctx, http.MethodPost, "/api/v1/user/self", withBody(userReq))
+	req, err := us.client.newRequest(ctx, http.MethodPost, "api/v1/user/self", withBody(userReq))
 	if err != nil {
 		return
 	}
