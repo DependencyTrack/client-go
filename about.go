@@ -23,17 +23,6 @@ type AboutFramework struct {
 	Timestamp string    `json:"timestamp"`
 }
 
-type HealthCheck struct {
-	Name   string      `json:"name"`
-	Status string      `json:"status"`
-	Data   interface{} `json:"data,omitempty"`
-}
-
-type Health struct {
-	Status string        `json:"status"`
-	Checks []HealthCheck `json:"checks"`
-}
-
 type AboutService struct {
 	client *Client
 }
@@ -45,15 +34,5 @@ func (as AboutService) Get(ctx context.Context) (a About, err error) {
 	}
 
 	_, err = as.client.doRequest(req, &a)
-	return
-}
-
-func (as AboutService) Health(ctx context.Context) (h Health, err error) {
-	req, err := as.client.newRequest(ctx, http.MethodGet, "health", withoutAuth())
-	if err != nil {
-		return
-	}
-
-	_, err = as.client.doRequest(req, &h)
 	return
 }

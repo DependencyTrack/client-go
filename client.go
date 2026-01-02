@@ -41,8 +41,9 @@ type Client struct {
 	BOM               BOMService
 	Component         ComponentService
 	Config            ConfigService
-	Finding           FindingService
 	Event             EventService
+	Finding           FindingService
+	Health            HealthService
 	LDAP              LDAPService
 	License           LicenseService
 	Metrics           MetricsService
@@ -93,8 +94,9 @@ func NewClient(baseURL string, options ...ClientOption) (*Client, error) {
 	client.BOM = BOMService{client: &client}
 	client.Component = ComponentService{client: &client}
 	client.Config = ConfigService{client: &client}
-	client.Finding = FindingService{client: &client}
 	client.Event = EventService{client: &client}
+	client.Finding = FindingService{client: &client}
+	client.Health = HealthService{client: &client}
 	client.LDAP = LDAPService{client: &client}
 	client.License = LicenseService{client: &client}
 	client.Metrics = MetricsService{client: &client}
