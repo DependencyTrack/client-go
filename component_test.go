@@ -69,6 +69,8 @@ func TestComponentLifecycle(t *testing.T) {
 	// Delete
 	{
 		err := client.Component.Delete(context.Background(), component.UUID)
+		// Occassionally receives 500 response from API - https://github.com/DependencyTrack/client-go/actions/runs/20657420675/job/59312871798?pr=55
+		// Due to the intermittent nature, the cause is not yet identified.
 		require.NoError(t, err)
 	}
 
