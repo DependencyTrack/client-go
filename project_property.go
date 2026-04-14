@@ -16,11 +16,6 @@ type ProjectProperty struct {
 	Description string `json:"description"`
 }
 
-type ProjectPropertyDelete struct {
-	Group string `json:"groupName"`
-	Name  string `json:"propertyName"`
-}
-
 type ProjectPropertyService struct {
 	client *Client
 }
@@ -61,7 +56,10 @@ func (ps ProjectPropertyService) Update(ctx context.Context, projectUUID uuid.UU
 }
 
 func (ps ProjectPropertyService) Delete(ctx context.Context, projectUUID uuid.UUID, groupName, propertyName string) (err error) {
-	property := ProjectPropertyDelete{
+	property := struct {
+		Group string `json:"groupName"`
+		Name  string `json:"propertyName"`
+	}{
 		Group: groupName,
 		Name:  propertyName,
 	}
