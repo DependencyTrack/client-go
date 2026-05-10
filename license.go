@@ -18,7 +18,6 @@ type License struct {
 	OSIApproved         bool      `json:"isOsiApproved"`
 	FSFLibre            bool      `json:"isFsfLibre"`
 	DeprecatedLicenseID bool      `json:"isDeprecatedLicenseId"`
-	IsCustomLicense     bool      `json:"isCustomLicense"`
 	SeeAlso             []string  `json:"seeAlso,omitempty"`
 }
 
