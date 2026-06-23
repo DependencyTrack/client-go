@@ -350,8 +350,15 @@ func (c Client) doRequest(req *http.Request, v interface{}) (a apiResponse, err 
 	}
 
 	if v != nil {
+		contentType := res.Header.Get("Content-Type")
+		contentType = strings.SplitN(contentType, ";", 2)[0]
 		switch vt := v.(type) {
 		case *string:
+			expectedContentTypes := []string{"text/plain", "application/vnd.cyclonedx+json", "application/vnd.cyclonedx+xml"}
+			if !sliceContains(expectedContentTypes, contentType) {
+				err = fmt.Errorf("expected %s content-type, but received %s", strings.Join(expectedContentTypes, ", "), contentType)
+				return
+			}
 			if content, readErr := io.ReadAll(res.Body); readErr == nil {
 				*vt = strings.TrimSpace(string(content))
 			} else {
@@ -359,6 +366,10 @@ func (c Client) doRequest(req *http.Request, v interface{}) (a apiResponse, err 
 				return
 			}
 		default:
+			if contentType != "application/json" {
+				err = fmt.Errorf("expected application/json content-type, but received %s", contentType)
+				return
+			}
 			err = json.NewDecoder(res.Body).Decode(v)
 			if err != nil {
 				return
