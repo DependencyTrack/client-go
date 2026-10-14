@@ -60,11 +60,10 @@ func setUpContainer(t *testing.T, options testContainerOptions) *Client {
 		version = options.Version
 	}
 
-	// TODO: Use the block below once "latest" tag points to "v5"
 	// Latest tag points to v5, which requires a Postgres container.
-	// if version == "latest" {
-	// 	options.UsePostgres = true
-	// }
+	if version == "latest" {
+		options.UsePostgres = true
+	}
 
 	image := fmt.Sprintf("dependencytrack/apiserver:%s", version)
 	env := map[string]string{
