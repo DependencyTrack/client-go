@@ -14,6 +14,8 @@ type PolicyCondition struct {
 	Operator PolicyConditionOperator `json:"operator"`
 	Subject  PolicyConditionSubject  `json:"subject"`
 	Value    string                  `json:"value"`
+
+	ViolationType PolicyConditionViolationType `json:"violationType,omitempty"`
 }
 
 type PolicyConditionService struct {
@@ -52,6 +54,15 @@ const (
 	PolicyConditionSubjectComponentHash   PolicyConditionSubject = "COMPONENT_HASH"
 	PolicyConditionSubjectCWE             PolicyConditionSubject = "CWE"
 	PolicyConditionSubjectVulnerabilityID PolicyConditionSubject = "VULNERABILITY_ID"
+	PolicyConditionSubjectExpression      PolicyConditionSubject = "EXPRESSION"
+)
+
+type PolicyConditionViolationType string
+
+const (
+	PolicyConditionViolationTypeLicense     PolicyConditionViolationType = "LICENSE"
+	PolicyConditionViolationTypeSecurity    PolicyConditionViolationType = "SECURITY"
+	PolicyConditionViolationTypeOperational PolicyConditionViolationType = "OPERATIONAL"
 )
 
 func (pcs PolicyConditionService) Create(ctx context.Context, policyUUID uuid.UUID, policyCondition PolicyCondition) (p PolicyCondition, err error) {
