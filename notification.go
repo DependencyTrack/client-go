@@ -39,6 +39,7 @@ type NotificationRule struct {
 	ScheduleNextTriggerAt   int64                       `json:"scheduleNextTriggerAt,omitempty"`
 	ScheduleCron            string                      `json:"scheduleCron,omitempty"`
 	ScheduleSkipUnchanged   bool                        `json:"scheduleSkipUnchanged,omitempty"`
+	FilterExpression        string                      `json:"filterExpression,omitempty"`
 	Publisher               NotificationPublisher       `json:"publisher,omitempty"`
 	Projects                []Project                   `json:"projects,omitempty"`
 	Tags                    []Tag                       `json:"tags,omitempty"`
