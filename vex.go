@@ -26,12 +26,10 @@ type vexUploadResponse struct {
 type VEXUploadToken string
 
 func (vs VEXService) ExportCycloneDX(ctx context.Context, projectUUID uuid.UUID) (vex string, err error) {
-	req, err := vs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/vex/cyclonedx/project/%s", projectUUID))
+	req, err := vs.client.newRequest(ctx, http.MethodGet, fmt.Sprintf("api/v1/vex/cyclonedx/project/%s", projectUUID), withAcceptContentType("application/vnd.cyclonedx+json"))
 	if err != nil {
 		return
 	}
-
-	req.Header.Set("Accept", "application/vnd.cyclonedx+json")
 
 	_, err = vs.client.doRequest(req, &vex)
 	return

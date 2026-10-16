@@ -56,3 +56,13 @@ func OptionalBoolOf(value bool) *bool {
 func OptionalBool() *bool {
 	return nil
 }
+
+// slices.Contains - with the same signature is Go 1.21+
+func sliceContains[S ~[]E, E comparable](haystack S, needle E) bool {
+	for _, v := range haystack {
+		if v == needle {
+			return true
+		}
+	}
+	return false
+}
