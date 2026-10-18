@@ -251,5 +251,4 @@ func (ts TagService) GetTagsForPolicy(ctx context.Context, policy uuid.UUID, po 
 
 	p.TotalCount = res.TotalCount
 	return
-
 }

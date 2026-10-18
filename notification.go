@@ -15,12 +15,13 @@ type NotificationService struct {
 
 type NotificationPublisher struct {
 	UUID             uuid.UUID `json:"uuid"`
-	Name             string    `json:"name"`
+	Name             string    `json:"name,omitempty"`
 	Description      string    `json:"description,omitempty"`
-	PublisherClass   string    `json:"publisherClass"`
+	PublisherClass   string    `json:"publisherClass,omitempty"`
+	ExtensionName    string    `json:"extensionName,omitempty"`
 	Template         string    `json:"template,omitempty"`
-	TemplateMIMEType string    `json:"templateMimeType"`
-	DefaultPublisher bool      `json:"defaultPublisher"`
+	TemplateMIMEType string    `json:"templateMimeType,omitempty"`
+	DefaultPublisher bool      `json:"defaultPublisher,omitempty"`
 }
 
 type NotificationRule struct {
@@ -31,7 +32,7 @@ type NotificationRule struct {
 	LogSuccessfulPublish    bool                        `json:"logSuccessfulPublish"`
 	Scope                   NotificationRuleScope       `json:"scope"`
 	NotificationLevel       NotificationRuleLevel       `json:"notificationLevel,omitempty"`
-	NotifyOn                []NotificationRuleNotifyOn  `json:"notifyOn,omitempty"`
+	NotifyOn                *[]NotificationRuleNotifyOn `json:"notifyOn,omitempty"` // Need to distinguish empty for not-set (Schedule), and empty (Event).
 	TriggerType             NotificationRuleTriggerType `json:"triggerType"`
 	Message                 string                      `json:"message,omitempty"`
 	PublisherConfig         string                      `json:"publisherConfig,omitempty"`

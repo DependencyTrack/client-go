@@ -2,7 +2,6 @@ package dtrack
 
 import (
 	"context"
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -174,7 +173,6 @@ func TestOIDCUsers(t *testing.T) {
 		Username: "Username",
 	})
 	require.NoError(t, err)
-	fmt.Printf("%+v", user)
 	require.Equal(t, user.Username, "Username")
 
 	// Check presence

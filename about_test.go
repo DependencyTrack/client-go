@@ -53,6 +53,7 @@ type testContainerOptions struct {
 }
 
 func setUpContainer(t *testing.T, options testContainerOptions) *Client {
+	t.Helper()
 	ctx := context.Background()
 
 	version := "latest"
@@ -112,7 +113,7 @@ func setUpContainer(t *testing.T, options testContainerOptions) *Client {
 		env["DT_DATASOURCE_URL"] = "jdbc:postgresql://postgres:5432/dtrack"
 		env["DT_DATASOURCE_USERNAME"] = "dtrack"
 		env["DT_DATASOURCE_PASSWORD"] = "dtrack"
-		waitingFor = wait.ForListeningPort("8080/tcp")
+		waitingFor = wait.ForHTTP("/api/version")
 	}
 
 	container, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{

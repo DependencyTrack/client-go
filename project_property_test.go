@@ -150,6 +150,5 @@ func TestProjectPropertyService_Delete(t *testing.T) {
 	// Verify absence
 	properties, err = client.ProjectProperty.GetAll(context.Background(), project.UUID, po)
 	require.NoError(t, err)
-	require.Len(t, properties.Items, 0)
-
+	require.Empty(t, properties.Items)
 }

@@ -3,6 +3,7 @@ package dtrack_test
 import (
 	"context"
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"os"
 	"time"
@@ -55,7 +56,7 @@ func Example_uploadBOM() {
 					return
 				}
 			case <-timeout:
-				errChan <- fmt.Errorf("timeout exceeded")
+				errChan <- errors.New("timeout exceeded")
 				return
 			}
 		}

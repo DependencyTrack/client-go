@@ -2,6 +2,7 @@ package dtrack
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 )
@@ -9,7 +10,7 @@ import (
 func WithAPIKey(apiKey string) ClientOption {
 	return func(c *Client) error {
 		if apiKey == "" {
-			return fmt.Errorf("no api key provided")
+			return errors.New("no api key provided")
 		}
 
 		currentTransport := c.httpClient.Transport
@@ -30,7 +31,7 @@ func WithAPIKey(apiKey string) ClientOption {
 func WithBearerToken(token string) ClientOption {
 	return func(c *Client) error {
 		if token == "" {
-			return fmt.Errorf("no token provided")
+			return errors.New("no token provided")
 		}
 
 		currentTransport := c.httpClient.Transport

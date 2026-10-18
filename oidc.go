@@ -76,7 +76,6 @@ func (s OIDCService) GetAllGroups(ctx context.Context) (groups []OIDCGroup, err 
 
 	_, err = s.client.doRequest(req, &groups)
 	return
-
 }
 
 func (s OIDCService) CreateGroup(ctx context.Context, name string) (g OIDCGroup, err error) {

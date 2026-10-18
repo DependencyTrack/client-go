@@ -119,6 +119,7 @@ func TestParseNotification(t *testing.T) {
 }
 
 func parseFromFile(t *testing.T, filePath string) (n Notification) {
+	t.Helper()
 	file, err := os.Open(filePath)
 	require.NoError(t, err)
 	defer file.Close()

@@ -67,7 +67,7 @@ type Client struct {
 
 func NewClient(baseURL string, options ...ClientOption) (*Client, error) {
 	if baseURL == "" {
-		return nil, fmt.Errorf("no api base url provided")
+		return nil, errors.New("no api base url provided")
 	}
 
 	u, err := url.ParseRequestURI(baseURL)
@@ -419,7 +419,7 @@ func WithTimeout(timeout time.Duration) ClientOption {
 	}
 }
 
-// WithMTLS configures the http client to use client certificates
+// WithMTLS configures the http client to use client certificates.
 func WithMTLS(caCertFile string, clientCertFile string, clientKeyFile string) ClientOption {
 	return func(c *Client) error {
 		caCert, err := os.ReadFile(caCertFile)

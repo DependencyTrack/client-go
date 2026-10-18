@@ -51,7 +51,7 @@ func TestComponentLifecycle(t *testing.T) {
 
 	// Update component
 	{
-		component.Name = component.Name + "-With-Change"
+		component.Name += "-With-Change"
 		newComponent, err := client.Component.Update(context.Background(), component)
 		require.NoError(t, err)
 		require.Equal(t, newComponent.UUID, component.UUID)
@@ -69,7 +69,7 @@ func TestComponentLifecycle(t *testing.T) {
 	// Delete
 	{
 		err := client.Component.Delete(context.Background(), component.UUID)
-		// Occassionally receives 500 response from API - https://github.com/DependencyTrack/client-go/actions/runs/20657420675/job/59312871798?pr=55
+		// Occasionally receives 500 response from API - https://github.com/DependencyTrack/client-go/actions/runs/20657420675/job/59312871798?pr=55
 		// Due to the intermittent nature, the cause is not yet identified.
 		require.NoError(t, err)
 	}
