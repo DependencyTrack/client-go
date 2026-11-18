@@ -112,7 +112,8 @@ func setUpContainer(t *testing.T, options testContainerOptions) *Client {
 		env["DT_DATASOURCE_URL"] = "jdbc:postgresql://postgres:5432/dtrack"
 		env["DT_DATASOURCE_USERNAME"] = "dtrack"
 		env["DT_DATASOURCE_PASSWORD"] = "dtrack"
-		waitingFor = wait.ForListeningPort("8080/tcp")
+		// An open port does not mean the API is ready yet, so wait until /api/version returns a proper response.
+		waitingFor = wait.ForHTTP("/api/version").WithPort("8080/tcp")
 	}
 
 	container, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
