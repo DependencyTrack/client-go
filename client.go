@@ -42,6 +42,7 @@ type Client struct {
 	Component         ComponentService
 	Config            ConfigService
 	Event             EventService
+	Extension         ExtensionService
 	Finding           FindingService
 	Health            HealthService
 	LDAP              LDAPService
@@ -97,6 +98,7 @@ func NewClient(baseURL string, options ...ClientOption) (*Client, error) {
 	client.Component = ComponentService{client: &client}
 	client.Config = ConfigService{client: &client}
 	client.Event = EventService{client: &client}
+	client.Extension = ExtensionService{client: &client}
 	client.Finding = FindingService{client: &client}
 	client.Health = HealthService{client: &client}
 	client.LDAP = LDAPService{client: &client}
@@ -160,7 +162,7 @@ func (c Client) newRequest(ctx context.Context, method, path string, options ...
 		return nil, err
 	}
 
-	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Accept", "application/json, application/problem+json")
 	req.Header.Set("User-Agent", c.userAgent)
 
 	for _, option := range options {
@@ -349,7 +351,7 @@ func (c Client) doRequest(req *http.Request, v interface{}) (a apiResponse, err 
 		return
 	}
 
-	if v != nil {
+	if v != nil && res.StatusCode != http.StatusNoContent {
 		switch vt := v.(type) {
 		case *string:
 			if content, readErr := io.ReadAll(res.Body); readErr == nil {
